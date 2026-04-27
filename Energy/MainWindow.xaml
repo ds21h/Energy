@@ -1,0 +1,157 @@
+﻿<Window x:Class="Energy.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Energy"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="1074">
+    <Window.Resources>
+        <Style x:Key="lvStyle" TargetType="{x:Type ListView}">
+            <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+            <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="True"/>
+            <Setter Property="ListView.ItemsSource" Value="{Binding}"/>
+            <Setter Property="ListView.View">
+                <Setter.Value>
+                    <GridView>
+                        <GridViewColumn Header="UTC" Width="120">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tUTC" Text="{Binding xTimeStampUTCStr, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Local" Width="120">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tLocal" Text="{Binding xTimeStampLocalStr, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="MeterConsumed" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tMeterConsumed" Text="{Binding xMeterConsumedStr, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Estimated" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tConsumedEstimated" Text="{Binding xConsumedEstimated, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="MeterProduced" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tMeterProduced" Text="{Binding xMeterProducedStr, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Estimated" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tProducedEstimated" Text="{Binding xProducedEstimated, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Price" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tPrice" Text="{Binding xPriceStr, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Consumed" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tConsumed" Text="{Binding xConsumedStr, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Produced" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tProduced" Text="{Binding xProducedStr, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        <!-- DatePickerTextBox template moved to Window.Resources so it can be reused.
+             Watermark text is read from the attached property (local:DatePickerHelper.Watermark)
+             set on each DatePicker. -->
+        <Style TargetType="DatePickerTextBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DatePickerTextBox">
+                        <Grid>
+                            <!-- Host for the actual text content (required name for text host) -->
+                            <ScrollViewer x:Name="PART_ContentHost" />
+
+                            <!-- Watermark text shown when Text is empty/null.  Text is bound to the
+                                 attached property on the containing DatePicker so each DatePicker
+                                 can specify its own watermark. -->
+                            <TextBlock x:Name="Watermark"
+                                       Text="{Binding Path=(local:DatePickerHelper.Watermark), RelativeSource={RelativeSource AncestorType=DatePicker}}"
+                                       Foreground="Gray"
+                                       Margin="4,0,0,0"
+                                       VerticalAlignment="Center"
+                                       IsHitTestVisible="False"
+                                       Visibility="Collapsed" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <!-- Show watermark when Text is empty -->
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Watermark" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <!-- Also show when Text is null -->
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="Watermark" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <!-- Hide watermark when control is focused (optional) -->
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Watermark" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="209*"/>
+            <ColumnDefinition Width="505*"/>
+            <ColumnDefinition Width="82*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,10,0,0" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="1">
+            <Button x:Name="btnExport" Content="Export" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Click="btnExport_Click" Background="#00DDDDDD"/>
+            <Button x:Name="btnImport" Content="Import" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Click="btnImport_Click" Background="#00DDDDDD"/>
+            <DatePicker x:Name="dpStart" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Center" local:DatePickerHelper.Watermark="Start datum" SelectedDateChanged="dpStart_SelectedDateChanged" />
+            <DatePicker x:Name="dpEnd" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" local:DatePickerHelper.Watermark="Eind datum" SelectedDateChanged="dpEnd_SelectedDateChanged" />
+        </StackPanel>
+
+        <ListView x:Name="lstIntervals" Margin="6,0,0,5" Style="{DynamicResource lvStyle}" SelectionMode="Extended" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" Grid.ColumnSpan="3" Grid.Column="1">
+        </ListView>
+    </Grid>
+</Window>
