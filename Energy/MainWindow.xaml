@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Energy"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:local="clr-namespace:Energy"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1074">
+        Title="MainWindow" Height="450" Width="1074" Closing="Window_Closing">
     <Window.Resources>
         <Style x:Key="lvStyle" TargetType="{x:Type ListView}">
             <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
@@ -135,23 +136,36 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="209*"/>
+            <ColumnDefinition Width="409*"/>
             <ColumnDefinition Width="505*"/>
-            <ColumnDefinition Width="82*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,10,0,0" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="1">
-            <Button x:Name="btnExport" Content="Export" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Click="btnExport_Click" Background="#00DDDDDD"/>
-            <Button x:Name="btnImport" Content="Import" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Click="btnImport_Click" Background="#00DDDDDD"/>
-            <DatePicker x:Name="dpStart" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Center" local:DatePickerHelper.Watermark="Start datum" SelectedDateChanged="dpStart_SelectedDateChanged" />
-            <DatePicker x:Name="dpEnd" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" local:DatePickerHelper.Watermark="Eind datum" SelectedDateChanged="dpEnd_SelectedDateChanged" />
-        </StackPanel>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <MenuItem Header="_Bestand">
+                <MenuItem x:Name="mnuLoad" Header="_Laad Meterstanden" Click="mnuLoad_Click"/>
+                <MenuItem x:Name="mnuExport" Header="_Exporteer" Click="mnuExport_Click"/>
+            </MenuItem>
+        </Menu>
 
-        <ListView x:Name="lstIntervals" Margin="6,0,0,5" Style="{DynamicResource lvStyle}" SelectionMode="Extended" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" Grid.ColumnSpan="3" Grid.Column="1">
+        <ListView x:Name="lstIntervals" Margin="0,0,0,5" Style="{DynamicResource lvStyle}" SelectionMode="Extended" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" Grid.ColumnSpan="1" Grid.Column="1">
         </ListView>
+        <lvc:CartesianChart x:Name="crtValues" Grid.Row="1" Grid.Column="2"
+        LegendPosition="Right">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <!--lvc:XamlLineSeries
+                    SeriesName="Mary"
+                    Values="5, 10, 8, 4"/-->
+                    <lvc:XamlColumnSeries x:Name="clmValues"
+                    SeriesName="Ana"
+                    Values="{Binding}"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
+
     </Grid>
 </Window>

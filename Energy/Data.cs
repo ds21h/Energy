@@ -17,10 +17,23 @@ namespace Energy {
         private List<DataLine> mLines = new List<DataLine>(50000);
         private DateTime mStart;
         private DateTime mEnd;
+        private bool mModified;
 
         internal List<DataLine> xLines {
             get {
                 return mLines;
+            }
+        }
+
+        internal DataLine? xLastEntry {
+           get {
+                DataLine? lLine;
+                if (mLines.Count > 0) {
+                    lLine = mLines[mLines.Count - 1];
+                } else {
+                    lLine = null;
+                }
+                return lLine;
             }
         }
 
@@ -42,6 +55,7 @@ namespace Energy {
                 mStart = DateTime.MinValue;
                 mEnd = DateTime.MinValue;
             }
+            mModified = false;
         }
 
         private void sReadData() {
@@ -70,7 +84,7 @@ namespace Energy {
                         if (lLine == null) {
                             break;
                         }
-                        lParts = lLine.Split(',');
+                        lParts = lLine.Split(';');
                         if (lParts.Length >= 10) {
                             if (int.TryParse(lParts[0], out lVersion)) {
                                 if (lVersion == 1) {
@@ -108,13 +122,20 @@ namespace Energy {
             }
         }
 
-        internal void xWriteData() {
+        internal void xSaveData() {
             string lFileName;
+
+            if (mModified) {
+                lFileName = Path.Combine(Parameters.GetInstance.xDataDir, cFileName + ".csv");
+                xWriteData(lFileName);
+            }
+        }   
+
+        internal void xWriteData(string pFileName) {
             StringBuilder lBuilder;
             StreamWriter lStreamOut;
 
-            lFileName = Path.Combine(Parameters.GetInstance.xDataDir, cFileName + ".csv");
-            lStreamOut = new StreamWriter(lFileName, false);
+            lStreamOut = new StreamWriter(pFileName, false);
             lStreamOut.WriteLine("Version;TimeStampUTC;TimeStampLocal;MeterConsumed;ConsumedEstimated;MeterProduced;ProducedEstimated;Price;Consumed;Produced");
             foreach (DataLine bLine in mLines) {
                 lBuilder = new StringBuilder();
@@ -178,6 +199,7 @@ namespace Energy {
                 mLines[lIndexTotal].xPrice = lPriceLines[lIndex].xValue;
                 lIndexTotal++;
             }
+            mModified = true;
         }
     }
 }

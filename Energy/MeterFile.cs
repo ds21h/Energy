@@ -110,7 +110,8 @@ namespace Energy {
             int lStartSearch;
             int lEnd;
             int lEndSearch;
-            bool lCorrected;
+            int lCorrection;
+            int lStatus;
 
             lStart = -1;
             for (lIndex = 0; lIndex < mLines.Length - 1; lIndex++) {
@@ -123,34 +124,30 @@ namespace Energy {
                         lEnd = lIndex;
                         lStartSearch = lStart;
                         lEndSearch = lEnd;
-                        lCorrected = false;
+                        lCorrection = 96;
                         do {
-                            lStartSearch -= 96;
-                            lEndSearch -= 96;
+                            lStatus = 0;
+                            lStartSearch = lStart - lCorrection;
+                            lEndSearch = lEnd - lCorrection;
                             if (lStartSearch < 0) {
-                                break;
-                            }
-                            if (sTestRange(lStartSearch, lEndSearch)) {
-                                sCorrectLines(lStart, lEnd, lStartSearch);
-                                lCorrected = true;
-                                break;
-                            }
-                        } while (true);
-                        if (!lCorrected) {
-                            lStartSearch = lStart;
-                            lEndSearch = lEnd;
-                            do {
-                                lStartSearch += 96;
-                                lEndSearch += 96;
-                                if (lEndSearch >= mLines.Length) {
-                                    break;
-                                }
+                                lStatus++;
+                            } else {
                                 if (sTestRange(lStartSearch, lEndSearch)) {
                                     sCorrectLines(lStart, lEnd, lStartSearch);
                                     break;
                                 }
-                            } while (true);
-                        }
+                            }
+                            lStartSearch = lStart + lCorrection;
+                            lEndSearch = lEnd + lCorrection;
+                            if (lEndSearch >= mLines.Length) {
+                                lStatus++;
+                            }
+                            if (sTestRange(lStartSearch, lEndSearch)) {
+                                sCorrectLines(lStart, lEnd, lStartSearch);
+                                break;
+                            }
+                            lCorrection += 96;
+                        } while (lStatus < 2);
                         lStart = -1;
                     }
                 }

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+	  <!--TargetFramework>net6.0-windows</TargetFramework-->
+    <UseWPF>true</UseWPF>
+    <!-- adjust TargetFramework to your project's TF (e.g. net48) if not using .NET Core/5+ -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Ensure the exact SkiaSharp native/runtime package your app needs is referenced.
+         Version 2.88.0 matches the assembly version from the XDG0003 error. -->
+    <PackageReference Include="SkiaSharp" Version="2.88.0" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="2.88.0" />
+  </ItemGroup>
+
+  <!-- After adding the references: dotnet restore / NuGet restore, Clean -> Rebuild in Visual Studio.
+       If your project targets .NET Framework, consider using bindingRedirects in app.config
+       or install the matching SkiaSharp native assets package for your platform. -->
+</Project>
