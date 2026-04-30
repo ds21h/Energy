@@ -17,19 +17,14 @@ namespace Energy {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow: Window {
-        private List<double> mChartData;
+        private pgeTable mPageTable;
+        private pgeGraph mPageGraph;
 
         public MainWindow() {
-            int lIndex;
-
             InitializeComponent();
-            lstIntervals.ItemsSource = Data.getInstance.xLines;
-            lstIntervals.InvalidateVisual();
-            mChartData = new List<double>();
-            for (lIndex = 0; lIndex < 600; lIndex++) {
-                mChartData.Add(Data.getInstance.xLines[lIndex].xConsumed);
-            }
-            clmValues.Values = mChartData;
+            mPageTable = new pgeTable();
+            mPageGraph = new pgeGraph();
+            frView.Navigate(mPageTable);
         }
 
         private string? sOpendialog(string pFilter) {
@@ -80,8 +75,7 @@ namespace Energy {
                             if (lFileName != null) {
                                 lPriceFile = new PriceFile(lFileName, lStart.Value, lEnd.Value);
                                 Data.getInstance.xImportMeterFile(lMeterConsumed, lMeterProduced, lPriceFile);
-                                lstIntervals.ItemsSource = Data.getInstance.xLines;
-                                lstIntervals.InvalidateVisual();
+                                mPageTable.xRefresh();
                             }
                         }
                     }
@@ -107,6 +101,14 @@ namespace Energy {
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             Data.getInstance.xSaveData();
+        }
+
+        private void btnList_Click(object sender, RoutedEventArgs e) {
+            frView.Navigate(mPageTable);
+        }
+
+        private void btnGraph_Click(object sender, RoutedEventArgs e) {
+            frView.Navigate(mPageGraph);
         }
     }
 }
