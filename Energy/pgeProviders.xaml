@@ -1,0 +1,92 @@
+﻿<Page x:Class="Energy.pgeProviders"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Energy"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="pgeProviders">
+    <Page.Resources>
+        <Style x:Key="lvStyle" TargetType="{x:Type ListView}">
+            <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+            <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="True"/>
+            <Setter Property="ListView.ItemsSource" Value="{Binding}"/>
+            <Setter Property="ListView.View">
+                <Setter.Value>
+                    <GridView>
+                        <GridViewColumn Header="Provider" Width="120">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tProvider" Text="{Binding xProvider, Mode=OneWay}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Variant" Width="120">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tVariant" Text="{Binding xVariant, Mode=OneWay}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style-->
+    </Page.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="lstProviders" Margin="0,0,0,5" Style="{DynamicResource lvStyle}" SelectionMode="Extended" Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" Grid.ColumnSpan="1" Grid.Column="0" SelectionChanged="lstProviders_SelectionChanged">
+        </ListView>
+        <Canvas Margin="50,10,0,0" Grid.Row="0" Grid.Column="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" Content="Provider:" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Variant:" HorizontalAlignment="Left" Margin="0,20,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Tarieven" HorizontalAlignment="Left" Margin="0,50,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Abonnement:" HorizontalAlignment="Left" Margin="0,70,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Afname" HorizontalAlignment="Left" Margin="0,90,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Bedrag/KWh:" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Toeslag/KWh:" HorizontalAlignment="Left" Margin="0,130,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Teruglevering" HorizontalAlignment="Left" Margin="0,150,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Bedrag/KWh:" HorizontalAlignment="Left" Margin="0,170,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Toeslag/KWh:" HorizontalAlignment="Left" Margin="0,190,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="txtProvider" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,5,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="250" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtVariant" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,25,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="250" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtFee" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,75,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtConsumption" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,115,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtPrice" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,135,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtReturn" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,175,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtReturnPrice" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,195,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button x:Name="btnNew" Content="Nieuw" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Center" Width="75" Click="btnNew_Click"/>
+                    <Button x:Name="btnOK" Content="Bewaren" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Center" Width="75" Click="btnOK_Click"/>
+                    <Button x:Name="btnDelete" Content="Verwijderen" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Center" Width="75" Click="btnDelete_Click"/>
+                </StackPanel>
+            </Grid>
+        </Canvas>
+    </Grid>
+</Page>

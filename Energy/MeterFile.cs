@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace Energy {
     internal class MeterFile {
@@ -44,8 +45,8 @@ namespace Energy {
         internal MeterFile(string pFileName, DateTime pStart, DateTime pEnd) {
             mFileName = pFileName;
             mLines = new MeterLine[0];
-            mStart = pStart;
-            mEnd = pEnd.AddMinutes(15);
+            mStart = DateTime.SpecifyKind(pStart.ToUniversalTime(), DateTimeKind.Utc);
+            mEnd = DateTime.SpecifyKind(pEnd.ToUniversalTime(), DateTimeKind.Utc).AddMinutes(15);
             sProcess();
         }
 

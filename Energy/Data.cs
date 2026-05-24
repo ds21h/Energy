@@ -5,19 +5,24 @@ using System.Globalization;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Energy {
     internal class Data {
         private static Data? mData;
 
-        private const string cFileName = "Standen";
-        private const int cMinVersion = 1;
-        private const int cCurrentVersion = 1;
+        private const string cFileNameData = "Standen";
+        private const string cFileNameProviders = "Providers.xml";
+        private const int cCurrentVersionBase = 1;
+        private const int cCurrentVersionProviders = 1;
         private CultureInfo mFileCulture = new CultureInfo("nl-NL");
         private List<DataLine> mLines = new List<DataLine>(50000);
         private DateTime mStart;
         private DateTime mEnd;
-        private bool mModified;
+        private bool mDataModified;
+        private bool mProvidersModified;
+        private List<Provider> mProviders = new List<Provider>();
 
         internal List<DataLine> xLines {
             get {
@@ -25,8 +30,14 @@ namespace Energy {
             }
         }
 
+        internal List<Provider> xProviders {
+            get {
+                return mProviders;
+            }
+        }
+
         internal DataLine? xLastEntry {
-           get {
+            get {
                 DataLine? lLine;
                 if (mLines.Count > 0) {
                     lLine = mLines[mLines.Count - 1];
@@ -46,6 +57,12 @@ namespace Energy {
             }
         }
 
+        internal bool xProvidersChanged {
+            set {
+                mProvidersModified = value;
+            }
+        }
+
         private Data() {
             sReadData();
             if (mLines.Count > 0) {
@@ -55,7 +72,9 @@ namespace Energy {
                 mStart = DateTime.MinValue;
                 mEnd = DateTime.MinValue;
             }
-            mModified = false;
+            mDataModified = false;
+            mProvidersModified = false;
+            sReadProviders();
         }
 
         private void sReadData() {
@@ -75,7 +94,7 @@ namespace Energy {
             double lProduced;
             DataLine lDataLine;
 
-            lFileName = Path.Combine(Parameters.GetInstance.xDataDir, cFileName + ".csv");
+            lFileName = Path.Combine(Parameters.GetInstance.xDataDir, cFileNameData + ".csv");
             if (File.Exists(lFileName)) {
                 try {
                     lStreamIn = new StreamReader(lFileName);
@@ -125,11 +144,11 @@ namespace Energy {
         internal void xSaveData() {
             string lFileName;
 
-            if (mModified) {
-                lFileName = Path.Combine(Parameters.GetInstance.xDataDir, cFileName + ".csv");
+            if (mDataModified) {
+                lFileName = Path.Combine(Parameters.GetInstance.xDataDir, cFileNameData + ".csv");
                 xWriteData(lFileName);
             }
-        }   
+        }
 
         internal void xWriteData(string pFileName) {
             StringBuilder lBuilder;
@@ -140,7 +159,7 @@ namespace Energy {
             foreach (DataLine bLine in mLines) {
                 lBuilder = new StringBuilder();
                 lBuilder.AppendLine(string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9}",
-                    cCurrentVersion,
+                    cCurrentVersionBase,
                     bLine.xTimeStampUTC.ToString(mFileCulture),
                     bLine.xTimeStampLocal.ToString(mFileCulture),
                     bLine.xMeterConsumed.ToString(mFileCulture),
@@ -153,6 +172,178 @@ namespace Energy {
                 lStreamOut.Write(lBuilder.ToString());
             }
             lStreamOut.Close();
+        }
+
+        private void sReadProviders() {
+            XmlDocument lDoc;
+            XmlElement? lRoot;
+            string lFileName;
+            int lVersion;
+            Provider lProvider;
+
+            mProviders.Clear();
+            lFileName = Path.Combine(Parameters.GetInstance.xDataDir, cFileNameProviders);
+            if (File.Exists(lFileName)) {
+                lDoc = new XmlDocument();
+                lDoc.Load(lFileName);
+                lRoot = lDoc.DocumentElement;
+                if (lRoot != null) {
+                    foreach (XmlNode bNode in lRoot.ChildNodes) {
+                        if (bNode.NodeType != XmlNodeType.Comment) {
+                            switch (bNode.Name) {
+                                case "Version": {
+                                        if (!int.TryParse(bNode.InnerText, out lVersion)){
+                                            lVersion = 0;
+                                        }
+                                        break;
+                                    }
+                                case "Provider": {
+                                        lProvider = sProcessProvider(bNode);
+                                        if (lProvider != null) {
+                                            mProviders.Add(lProvider);
+                                        }
+                                        break;
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private Provider sProcessProvider(XmlNode pNode) {
+            Provider lProvider;
+            double lTemp;
+
+            lProvider = new Provider();
+            foreach (XmlNode bNode in pNode.ChildNodes) {
+                if (bNode.NodeType != XmlNodeType.Comment) {
+                    switch (bNode.Name) {
+                        case "Provider": {
+                                lProvider.xProvider = bNode.InnerText;
+                                break;
+                            }
+                        case "Variant": {
+                                lProvider.xVariant = bNode.InnerText;
+                                break;
+                            }
+                        case "MonthlyTariff": {
+                                if (double.TryParse(bNode.InnerText, out lTemp)) {
+                                    lProvider.xMonthlyTariff = lTemp;
+                                }
+                                break;
+                            }
+                        case "ConsumedFixedPrice": {
+                                if (double.TryParse(bNode.InnerText, out lTemp)) {
+                                    lProvider.xConsumedFixedPrice = lTemp;
+                                }
+                                break;
+                            }
+                        case "ConsumedExtra": {
+                                if (double.TryParse(bNode.InnerText, out lTemp)) {
+                                    lProvider.xConsumedExtra = lTemp;
+                                }
+                                break;
+                            }
+                        case "ProducedFixedPrice": {
+                                if (double.TryParse(bNode.InnerText, out lTemp)) {
+                                    lProvider.xProducedFixedPrice = lTemp;
+                                }
+                                break;
+                            }
+                        case "ProducedExtra": {
+                                if (double.TryParse(bNode.InnerText, out lTemp)) {
+                                    lProvider.xProducedExtra = lTemp;
+                                }
+                                break;
+                            }
+                    }
+                }
+            }
+            return lProvider;
+        }
+
+        internal void xSaveProviders() {
+            XmlDocument lDoc;
+            XmlElement lRoot;
+            XmlElement lProviderElement;
+            XmlElement lEntry;
+            XmlText lText;
+            XmlAttribute lAttribute;
+
+            if (mProvidersModified) {
+                lDoc = new XmlDocument();
+                lRoot = lDoc.CreateElement("Providers");
+                lDoc.AppendChild(lRoot);
+                lAttribute = lDoc.CreateAttribute("Version");
+                lAttribute.Value = cCurrentVersionProviders.ToString();
+                lRoot.Attributes.Append(lAttribute);
+                foreach (Provider bProvider in mProviders) {
+                    lProviderElement = lDoc.CreateElement("Provider");
+                    lRoot.AppendChild(lProviderElement);
+
+                    lEntry = lDoc.CreateElement("Provider");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xProvider);
+                    lEntry.AppendChild(lText);
+
+                    lEntry = lDoc.CreateElement("Variant");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xVariant);
+                    lEntry.AppendChild(lText);
+
+                    lEntry = lDoc.CreateElement("MonthlyTariff");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xMonthlyTariff.ToString());
+                    lEntry.AppendChild(lText);
+
+                    lEntry = lDoc.CreateElement("ConsumedFixedPrice");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xConsumedFixedPrice.ToString());
+                    lEntry.AppendChild(lText);
+
+                    lEntry = lDoc.CreateElement("ConsumedExtra");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xConsumedExtra.ToString());
+                    lEntry.AppendChild(lText);
+
+                    lEntry = lDoc.CreateElement("ProducedFixedPrice");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xProducedFixedPrice.ToString());
+                    lEntry.AppendChild(lText);
+
+                    lEntry = lDoc.CreateElement("ProducedExtra");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xProducedExtra.ToString());
+                    lEntry.AppendChild(lText);
+                }
+                lDoc.Save(Path.Combine(Parameters.GetInstance.xDataDir, cFileNameProviders));
+                mProvidersModified = false;
+            }
+        }
+
+        internal bool xProviderPresent(string pProvider, string pVariant) {
+            bool lResult;
+
+            lResult = false;
+            foreach (Provider bProvider in mProviders) {
+                if (bProvider.xProvider == pProvider && bProvider.xVariant == pVariant) {
+                    lResult = true;
+                    break;
+                }
+            }
+            return lResult;
+        }
+
+        internal void xAddProvider(Provider pProvider) {
+            mProviders.Add(pProvider);
+            mProviders.Sort();
+            mProvidersModified = true;
+        }
+
+        internal void xDeleteProvider(Provider pProvider) {
+            mProviders.Remove(pProvider);
+            mProvidersModified = true;
         }
 
         internal void xImportMeterFile(MeterFile pMeterConsumed, MeterFile pMeterProduced, PriceFile pPrices) {
@@ -194,12 +385,22 @@ namespace Energy {
                 if (mLines[lIndexTotal].xProducedEstimated) {
                     mLines[lIndexTotal].xMeterProduced = lLinesProduced[lIndex].xMeterValue;
                     mLines[lIndexTotal].xProducedEstimated = lLinesProduced[lIndex].xEstimated;
-                    mLines[lIndexTotal].xProduced = lLinesProduced[lIndex].xPeriodValue;    
+                    mLines[lIndexTotal].xProduced = lLinesProduced[lIndex].xPeriodValue;
                 }
                 mLines[lIndexTotal].xPrice = lPriceLines[lIndex].xValue;
                 lIndexTotal++;
             }
-            mModified = true;
+            mDataModified = true;
+        }
+
+        internal void xCalculate(Provider pProvider, double pTax, int pMaxBattery) {
+            double lLastBattery;
+
+            lLastBattery = 0;
+            foreach (DataLine bLine in mLines) {
+                bLine.xCalculate(pProvider, pTax, pMaxBattery, lLastBattery);
+                lLastBattery = bLine.xBattery;
+            }
         }
     }
 }

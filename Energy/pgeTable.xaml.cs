@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,14 +17,18 @@ namespace Energy {
     /// Interaction logic for pgeTable.xaml
     /// </summary>
     public partial class pgeTable: Page {
+        private ObservableCollection<DataLine> mDataLines;
         public pgeTable() {
             InitializeComponent();
-            xRefresh();
+            mDataLines = new ObservableCollection<DataLine>(Data.getInstance.xLines);
+            lstIntervals.ItemsSource = mDataLines;
         }
 
         internal void xRefresh() {
-            lstIntervals.ItemsSource = Data.getInstance.xLines;
-            lstIntervals.InvalidateVisual();
+            mDataLines.Clear();
+            foreach (DataLine lLine in Data.getInstance.xLines) {
+                mDataLines.Add(lLine);
+            }
         }
     }
 }

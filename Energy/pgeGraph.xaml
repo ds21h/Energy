@@ -7,7 +7,7 @@
       xmlns:local="clr-namespace:Energy"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="pgeGraph">
+      Title="pgeGraph" Loaded="Page_Loaded">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -15,18 +15,63 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <lvc:CartesianChart x:Name="crtValues" Grid.Row="0" Grid.Column="0"
-        LegendPosition="Right">
+
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="0,0,0,0" Grid.Row="0">
+            <Label Content="Startdatum" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+            <DatePicker x:Name="dpStart" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" SelectedDateChanged="dpStart_SelectedDateChanged"/>
+            <Label Content="Periode" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+            <ComboBox x:Name="cmbPeriod" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center" SelectedIndex="2" SelectionChanged="cmbPeriod_SelectionChanged">
+                <ComboBoxItem Content="1 dag"/>
+                <ComboBoxItem Content="3 dagen"/>
+                <ComboBoxItem Content="1 week"/>
+                <ComboBoxItem Content="2 weken"/>
+                <ComboBoxItem Content="1 maand"/>
+            </ComboBox>
+
+        </StackPanel>
+        <Label Content="KWH" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0" FontWeight="Bold" FontSize="18"/>
+        <lvc:CartesianChart x:Name="crtKWh" Grid.Row="1" Grid.Column="0" Margin="0,25,0,0"
+            ZoomMode="Both"
+            LegendPosition="Right">
             <lvc:CartesianChart.Series>
                 <lvc:SeriesCollection>
-                    <!--lvc:XamlLineSeries
-                    SeriesName="Mary"
-                    Values="5, 10, 8, 4"/-->
-                    <lvc:XamlColumnSeries x:Name="clmValues"
-                    SeriesName="Ana"
+                    <lvc:XamlColumnSeries x:Name="clmAfnKWh"
+                    SeriesName="Afname"
+                    Values="{Binding}"/>
+                    <lvc:XamlColumnSeries x:Name="clmLevKWh"
+                    SeriesName="Levering"
+                    Values="{Binding}"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
+        <Label Content="Euros" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Grid.Row="2" Grid.Column="0" FontWeight="Bold" FontSize="18"/>
+        <lvc:CartesianChart x:Name="crtEuros" Grid.Row="2" Grid.Column="0"
+            ZoomMode="Both"
+            LegendPosition="Right" Margin="0,25,0,0">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries x:Name="clmAfnEur"
+                    SeriesName="Afname"
+                    Values="{Binding}"/>
+                    <lvc:XamlColumnSeries x:Name="clmLevEur"
+                    SeriesName="Levering"
+                    Values="{Binding}"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
+        <Label Content="Batterij" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Grid.Row="3" Grid.Column="0" FontWeight="Bold" FontSize="18"/>
+        <lvc:CartesianChart x:Name="crtBatt" Grid.Row="3" Grid.Column="0"
+            ZoomMode="Both"
+            LegendPosition="Right" Margin="0,28,0,0">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries x:Name="clmBatt"
+                    SeriesName="Afname"
                     Values="{Binding}"/>
                 </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>

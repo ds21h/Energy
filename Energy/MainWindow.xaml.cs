@@ -19,12 +19,26 @@ namespace Energy {
     public partial class MainWindow: Window {
         private pgeTable mPageTable;
         private pgeGraph mPageGraph;
+        private pgeProviders mPageProviders;
+        private Provider mProvider = new Provider("ANWB");
+        private double mTax = 0.09161;
 
         public MainWindow() {
-            InitializeComponent();
             mPageTable = new pgeTable();
             mPageGraph = new pgeGraph();
+            mPageProviders = new pgeProviders();
+            InitializeComponent();
+            sCalculate();
             frView.Navigate(mPageTable);
+        }
+
+        private void sCalculate() {
+            int lBattery;
+            
+            lBattery = udBattery?.Value ?? 0;
+            Data.getInstance.xCalculate(mProvider, mTax, lBattery);
+            mPageTable.xRefresh();
+            mPageGraph.xRefresh();
         }
 
         private string? sOpendialog(string pFilter) {
@@ -101,6 +115,7 @@ namespace Energy {
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             Data.getInstance.xSaveData();
+            Data.getInstance.xSaveProviders();
         }
 
         private void btnList_Click(object sender, RoutedEventArgs e) {
@@ -109,6 +124,14 @@ namespace Energy {
 
         private void btnGraph_Click(object sender, RoutedEventArgs e) {
             frView.Navigate(mPageGraph);
+        }
+
+        private void btnContract_Click(object sender, RoutedEventArgs e) {
+            frView.Navigate(mPageProviders);
+        }
+
+        private void udBattery_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+            sCalculate();
         }
     }
 }

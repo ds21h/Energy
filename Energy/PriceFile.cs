@@ -29,8 +29,8 @@ namespace Energy {
 
         internal PriceFile(string pFileName, DateTime pStart, DateTime pEnd) {
             mFileName = pFileName;
-            mStart = pStart;
-            mEnd = pEnd;
+            mStart = DateTime.SpecifyKind(pStart.ToUniversalTime(), DateTimeKind.Utc);
+            mEnd = DateTime.SpecifyKind(pEnd.ToUniversalTime(), DateTimeKind.Utc);
             sInitLines();
 //            sExportTable(@"D:\Test\Energy\PriceTable01.csv");
             sProcessFile(pFileName);
