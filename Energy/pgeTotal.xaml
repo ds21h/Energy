@@ -1,12 +1,12 @@
-﻿<Page x:Class="Energy.pgeTable"
+﻿<Page x:Class="Energy.pgeTotal"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Energy"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="1600"
-      Title="pgeTable">
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="pgeTotal">
 
     <Page.Resources>
         <Style x:Key="lvStyle" TargetType="{x:Type ListView}">
@@ -17,101 +17,73 @@
             <Setter Property="ListView.View">
                 <Setter.Value>
                     <GridView>
-                        <GridViewColumn Header="Tijd UTC" Width="120">
+                        <GridViewColumn Header="Jaar" Width="50">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tUTC" Text="{Binding xTimeStampUTCStr, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tYear" Text="{Binding xYear, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Tijd Lokaal" Width="120">
+                        <GridViewColumn Header="Maand" Width="50">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tLocal" Text="{Binding xTimeStampLocalStr, Mode=OneTime}" TextAlignment="Right"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Meter gebruikt" Width="100">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock x:Name="tMeterConsumed" Text="{Binding xMeterConsumedStr, Mode=OneTime}" TextAlignment="Right"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Schatting" Width="100">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock x:Name="tConsumedEstimated" Text="{Binding xConsumedEstimated, Mode=OneTime}" TextAlignment="Right"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Meter geleverd" Width="100">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock x:Name="tMeterProduced" Text="{Binding xMeterProducedStr, Mode=OneTime}" TextAlignment="Right"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Schatting" Width="100">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock x:Name="tProducedEstimated" Text="{Binding xProducedEstimated, Mode=OneTime}" TextAlignment="Right"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Prijs" Width="100">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock x:Name="tPrice" Text="{Binding xPriceStr, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tMonth" Text="{Binding xMonth, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Header="Gebruikt" Width="100">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tConsumed" Text="{Binding xConsumedStr, Mode=OneTime}" TextAlignment="Right"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Geleverd" Width="100">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock x:Name="tProduced" Text="{Binding xProducedStr, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tConsumed" Text="{Binding xConsumed, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Header="Gebruikt (netto)" Width="100">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tNConsumed" Text="{Binding xNetConsumedStr, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tConsumedNet" Text="{Binding xConsumedNet, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Prijs gebruikt" Width="100">
+                        <GridViewColumn Header="Geleverd" Width="100">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tPriceConsumed" Text="{Binding xConsumedPriceStr, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tProduced" Text="{Binding xProduced, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Header="Geleverd (netto)" Width="100">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tNProduced" Text="{Binding xNetProducedStr, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tProducedNet" Text="{Binding xProducedNet, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Prijs gebruikt" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tPriceConsumed" Text="{Binding xConsumedPrice, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Header="Prijs geleverd" Width="100">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tPriceProduced" Text="{Binding xProducedPriceStr, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tPriceProduced" Text="{Binding xProducedPrice, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Batterij" Width="100">
+                        <GridViewColumn Header="Netbeheer" Width="100">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tBattery" Text="{Binding xBatteryStr, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tResort" Text="{Binding xResort, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Totaal" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tTotalPrice" Text="{Binding xTotalPrice, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -136,7 +108,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ListView x:Name="lstIntervals" Margin="10,5,0,5" Style="{DynamicResource lvStyle}" SelectionMode="Extended" Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" Grid.ColumnSpan="1" Grid.Column="0">
+        <ListView x:Name="lstTotals" Margin="10,5,0,5" Style="{DynamicResource lvStyle}" SelectionMode="Extended" Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" Grid.ColumnSpan="1" Grid.Column="0">
         </ListView>
 
     </Grid>

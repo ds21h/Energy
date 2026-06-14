@@ -23,6 +23,10 @@ namespace Energy {
         private bool mDataModified;
         private bool mProvidersModified;
         private List<Provider> mProviders = new List<Provider>();
+        private Provider mSelectedProvider;
+        private double mTax = 0.09161;
+        private double mResort = 1.0824;
+        private int mBattery = 0;
 
         internal List<DataLine> xLines {
             get {
@@ -36,6 +40,15 @@ namespace Energy {
             }
         }
 
+        internal Provider xSelectedProvider {
+            get {
+                return mSelectedProvider;
+            }
+            set {
+                mSelectedProvider = value;
+            }
+        }
+
         internal DataLine? xLastEntry {
             get {
                 DataLine? lLine;
@@ -45,6 +58,21 @@ namespace Energy {
                     lLine = null;
                 }
                 return lLine;
+            }
+        }
+
+        internal double xResort {
+            get {
+                return mResort;
+            }
+        }   
+
+        internal int xBattery {
+            get {
+                return mBattery;
+            }
+            set {
+                mBattery = value;
             }
         }
 
@@ -75,6 +103,13 @@ namespace Energy {
             mDataModified = false;
             mProvidersModified = false;
             sReadProviders();
+//            sCalculateProviders();
+            if (mProviders.Count > 0) {
+                mSelectedProvider = mProviders[0];
+            } else {
+                mSelectedProvider = new Provider();
+            }
+            xCalculate();
         }
 
         private void sReadData() {
@@ -322,6 +357,12 @@ namespace Energy {
             }
         }
 
+        private void sCalculateProviders() {
+            foreach (Provider bProvider in mProviders) {
+                bProvider.xImportLines(mLines, mTax);
+            }
+        }
+
         internal bool xProviderPresent(string pProvider, string pVariant) {
             bool lResult;
 
@@ -391,16 +432,18 @@ namespace Energy {
                 lIndexTotal++;
             }
             mDataModified = true;
+            xCalculate();
         }
 
-        internal void xCalculate(Provider pProvider, double pTax, int pMaxBattery) {
+        internal void xCalculate() {
             double lLastBattery;
 
             lLastBattery = 0;
             foreach (DataLine bLine in mLines) {
-                bLine.xCalculate(pProvider, pTax, pMaxBattery, lLastBattery);
+                bLine.xCalculate(mSelectedProvider, mTax, mBattery, lLastBattery);
                 lLastBattery = bLine.xBattery;
             }
+            sCalculateProviders();
         }
     }
 }

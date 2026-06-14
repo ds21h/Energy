@@ -27,6 +27,8 @@ namespace Energy {
         private Provider? mSelectedProvider;
         private eStatus mStatus;
 
+        internal event EventHandler<EventArgs>? ProvidersChanged;
+
         public pgeProviders() {
             InitializeComponent();
             mStatus = eStatus.None;
@@ -35,6 +37,15 @@ namespace Energy {
             sLoadProviderList();
             if (mProviders.Count  > 0) {
                 lstProviders.SelectedItem = mProviders[0];
+            }
+        }
+
+        private void sPostProvidersChanged() {
+            EventHandler<EventArgs>? lHandler;
+
+            lHandler = ProvidersChanged;
+            if (lHandler != null) {
+                lHandler.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -74,10 +85,12 @@ namespace Energy {
                     mSelectedProvider!.xProducedFixedPrice = double.Parse(txtReturn.Text);
                     mSelectedProvider!.xProducedExtra = double.Parse(txtReturnPrice.Text);
                     Data.getInstance.xProvidersChanged = true;
+                    sPostProvidersChanged();
                 } else {
                     if (mStatus == eStatus.New) {
                         lProvider = new Provider(txtProvider.Text, txtVariant.Text, double.Parse(txtFee.Text), double.Parse(txtConsumption.Text), double.Parse(txtPrice.Text), double.Parse(txtReturn.Text), double.Parse(txtReturnPrice.Text));
                         Data.getInstance.xAddProvider(lProvider);
+                        sPostProvidersChanged();
                         sLoadProviderList();
                         foreach (Provider bProvider in mProviders) {
                             if (bProvider == lProvider) {
@@ -94,6 +107,7 @@ namespace Energy {
         private void btnDelete_Click(object sender, RoutedEventArgs e) {
             Data.getInstance.xDeleteProvider(mSelectedProvider!);
             sLoadProviderList();
+            sPostProvidersChanged();
             if (mProviders.Count > 0) {
                 lstProviders.SelectedItem = mProviders[0];
             }
@@ -173,7 +187,7 @@ namespace Energy {
             }
 
             if (double.TryParse(txtReturnPrice.Text, out lValue)) {
-                if (lValue < 0d || lValue > 1.5d) {
+                if (lValue < -1.5d || lValue > 1.5d) {
                     txtReturnPrice.Background = Brushes.Red;
                     lResult = false;
                 } else {

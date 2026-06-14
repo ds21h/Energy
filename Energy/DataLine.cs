@@ -207,20 +207,19 @@ namespace Energy {
         private void sCalculateBattery(int pMaxBattery, double pLastBattery) {
             double lBattery;
 
-            lBattery = pLastBattery + mProduced - mConsumed;
+            lBattery = pLastBattery + mProduced;
+            if (lBattery > pMaxBattery) {
+                mNetProduced = lBattery - pMaxBattery;
+                lBattery = pMaxBattery;
+            } else {
+                mNetProduced = 0;
+            }
+            lBattery -= mConsumed;
             if (lBattery < 0) {
                 mNetConsumed = -lBattery;
-                mNetProduced = 0;
                 lBattery = 0;
             } else {
-                if (lBattery > pMaxBattery) {
-                    mNetConsumed = 0;
-                    mNetProduced = lBattery - pMaxBattery;
-                    lBattery = pMaxBattery;
-                } else {
-                    mNetConsumed = 0;
-                    mNetProduced = 0;
-                }
+                mNetConsumed = 0;
             }
             mBattery = lBattery;
         }

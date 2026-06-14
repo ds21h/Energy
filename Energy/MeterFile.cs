@@ -12,6 +12,13 @@ namespace Energy {
         private DateTime mEnd;
         private string mFileName;
         private MeterLine[] mLines;
+        private bool mFileOK;
+
+        internal bool xFileOK {
+            get {
+                return mFileOK;
+            }
+        }
 
         internal MeterLine[] xLines {
             get { 
@@ -45,20 +52,28 @@ namespace Energy {
         internal MeterFile(string pFileName, DateTime pStart, DateTime pEnd) {
             mFileName = pFileName;
             mLines = new MeterLine[0];
-            mStart = DateTime.SpecifyKind(pStart.ToUniversalTime(), DateTimeKind.Utc);
-            mEnd = DateTime.SpecifyKind(pEnd.ToUniversalTime(), DateTimeKind.Utc).AddMinutes(15);
-            sProcess();
+            if (pStart < pEnd) {
+                mFileOK = true;
+                mStart = DateTime.SpecifyKind(pStart.ToUniversalTime(), DateTimeKind.Utc);
+                mEnd = DateTime.SpecifyKind(pEnd.ToUniversalTime(), DateTimeKind.Utc).AddMinutes(15);
+                mFileOK = sProcess();
+            } else {
+                mFileOK = false;
+            }
         }
 
-        private void sProcess() {
+        private bool sProcess() {
+            bool lResult;
+
+            lResult = false;
             sInit();
-//            sExportTable(@"D:\Test\Energy\ExportFile01.csv");
-            sReadFile();
-//            sExportTable(@"D:\Test\Energy\ExportFile02.csv");
-            sCorrectFile();
-//            sExportTable(@"D:\Test\Energy\ExportFile03.csv");
-            sCalculateConsumption();
-//            sExportTable(@"D:\Test\Energy\ExportFile04.csv");
+            if (sReadFile()) {
+                if (sCorrectFile()) {
+                    sCalculateConsumption();
+                    lResult = true;
+                }
+            }
+            return lResult;
         }
 
         private void sInit() {
@@ -73,39 +88,50 @@ namespace Energy {
             }
         }
 
-        private void sReadFile() {
+        private bool sReadFile() {
             StreamReader lStreamIn;
             string? lLine;
             string[] lParts;
             DateTime lTimeStamp;
             int lIndex;
             double lValue;
+            bool lResult;
 
-            lStreamIn = new StreamReader(mFileName);
-            do {
-                lLine = lStreamIn.ReadLine();
-                if (lLine == null) {
-                    break;
-                }
-                lParts = lLine.Split(',');
-                if (lParts.Length >= 2) {
-                    lTimeStamp = sParseDate(lParts[0]);
-                    if (lTimeStamp != DateTime.MinValue) {
-                        lValue = sParseValue(lParts[1]);
-                        if (lValue >= 0) {
-                            lIndex = (int)((lTimeStamp - mStart).TotalMinutes / 15);
-                            if (lIndex >= 0 && lIndex < mLines.Length) {
-                                mLines[lIndex].xMeterValue = lValue;
-                                mLines[lIndex].xEstimated = false;
+            lResult = false;
+            try {
+                lStreamIn = new StreamReader(mFileName);
+                do {
+                    lLine = lStreamIn.ReadLine();
+                    if (lLine == null) {
+                        break;
+                    }
+                    lParts = lLine.Split(',');
+                    if (lParts.Length >= 2) {
+                        lTimeStamp = sParseDate(lParts[0]);
+                        if (lTimeStamp != DateTime.MinValue) {
+                            lValue = sParseValue(lParts[1]);
+                            if (lValue >= 0) {
+                                lIndex = (int)((lTimeStamp - mStart).TotalMinutes / 15);
+                                if (lIndex >= 0 && lIndex < mLines.Length) {
+                                    mLines[lIndex].xMeterValue = lValue;
+                                    mLines[lIndex].xEstimated = false;
+                                    lResult = true;
+                                }
                             }
                         }
                     }
-                }
-            } while (true);
-            lStreamIn.Close();
+                    if (!lResult) {
+                        break;
+                    }
+                } while (true);
+                lStreamIn.Close();
+            } catch (Exception) {
+                lResult = false;
+            }
+            return lResult;
         }
 
-        private void sCorrectFile() {
+        private bool sCorrectFile() {
             int lIndex;
             int lStart;
             int lStartSearch;
@@ -113,46 +139,59 @@ namespace Energy {
             int lEndSearch;
             int lCorrection;
             int lStatus;
+            MeterLine lLine;
+            bool lResult;
 
             lStart = -1;
-            for (lIndex = 0; lIndex < mLines.Length - 1; lIndex++) {
-                if (mLines[lIndex].xEstimated) {
-                    if (lStart < 0) {
-                        lStart = lIndex - 1;
-                    }
-                } else {
-                    if (lStart >= 0) {
-                        lEnd = lIndex;
-                        lStartSearch = lStart;
-                        lEndSearch = lEnd;
-                        lCorrection = 96;
-                        do {
-                            lStatus = 0;
-                            lStartSearch = lStart - lCorrection;
-                            lEndSearch = lEnd - lCorrection;
-                            if (lStartSearch < 0) {
-                                lStatus++;
-                            } else {
-                                if (sTestRange(lStartSearch, lEndSearch)) {
-                                    sCorrectLines(lStart, lEnd, lStartSearch);
-                                    break;
-                                }
+            lResult = false;
+            if (mLines.Length > 0) {
+                if (!mLines[0].xEstimated && !mLines[mLines.Length - 1].xEstimated) {
+                    lResult = true;
+                    for (lIndex = 0; lIndex < mLines.Length - 1; lIndex++) {
+                        lLine = mLines[lIndex];
+                        if (lLine.xEstimated) {
+                            if (lStart < 0) {
+                                lStart = lIndex - 1;
+                                lResult = false;
                             }
-                            lStartSearch = lStart + lCorrection;
-                            lEndSearch = lEnd + lCorrection;
-                            if (lEndSearch >= mLines.Length) {
-                                lStatus++;
+                        } else {
+                            if (lStart >= 0) {
+                                lEnd = lIndex;
+                                lStartSearch = lStart;
+                                lEndSearch = lEnd;
+                                lCorrection = 96;
+                                do {
+                                    lStatus = 0;
+                                    lStartSearch = lStart - lCorrection;
+                                    lEndSearch = lEnd - lCorrection;
+                                    if (lStartSearch < 0) {
+                                        lStatus++;
+                                    } else {
+                                        if (sTestRange(lStartSearch, lEndSearch)) {
+                                            sCorrectLines(lStart, lEnd, lStartSearch);
+                                            lResult = true;
+                                            break;
+                                        }
+                                    }
+                                    lStartSearch = lStart + lCorrection;
+                                    lEndSearch = lEnd + lCorrection;
+                                    if (lEndSearch >= mLines.Length) {
+                                        lStatus++;
+                                    }
+                                    if (sTestRange(lStartSearch, lEndSearch)) {
+                                        sCorrectLines(lStart, lEnd, lStartSearch);
+                                        lResult = true;
+                                        break;
+                                    }
+                                    lCorrection += 96;
+                                } while (lStatus < 2);
+                                lStart = -1;
                             }
-                            if (sTestRange(lStartSearch, lEndSearch)) {
-                                sCorrectLines(lStart, lEnd, lStartSearch);
-                                break;
-                            }
-                            lCorrection += 96;
-                        } while (lStatus < 2);
-                        lStart = -1;
+                        }
                     }
                 }
             }
+            return lResult;
         }
 
         private bool sTestRange(int pStart, int pEnd) {
@@ -178,14 +217,20 @@ namespace Energy {
             double lTotalSource;
             double lCurrentValue;
             double lFactor;
+            double lChange;
 
             lTotal = mLines[lEnd].xMeterValue - mLines[lStart].xMeterValue;
             lTotalSource = mLines[lStartSource + (lEnd - lStart)].xMeterValue - mLines[lStartSource].xMeterValue;
             lCurrentValue = mLines[lStart].xMeterValue;
             lSourceIndex = lStartSource + 1;
             for (lIndex = lStart + 1; lIndex < lEnd; lIndex++) {
-                lFactor = (mLines[lSourceIndex + 1].xMeterValue - mLines[lSourceIndex].xMeterValue) / lTotalSource;
-                lCurrentValue += lTotal * lFactor;
+                if (lTotalSource == 0) {
+                    lChange = lTotal/(lEnd - lStart);
+                } else {
+                    lFactor = (mLines[lSourceIndex + 1].xMeterValue - mLines[lSourceIndex].xMeterValue) / lTotalSource;
+                    lChange = lTotal * lFactor;
+                }
+                lCurrentValue += lChange;
                 mLines[lIndex].xMeterValue = lCurrentValue;
                 lSourceIndex++;
             }

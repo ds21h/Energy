@@ -18,13 +18,13 @@ namespace Energy {
 
     public partial class pgeGraph: Page {
 
-        private ObservableCollection<DataLine> mChartData;
+        private ObservableCollection<ProviderLine> mChartData;
         private List<Axis> mXAxes;
         private int mIndexStart;
         private int mPeriod;
 
         public pgeGraph() {
-            mChartData = new ObservableCollection<DataLine>();
+            mChartData = new ObservableCollection<ProviderLine>();
             InitializeComponent();
             mXAxes = new List<Axis> {
                 new Axis {
@@ -33,27 +33,28 @@ namespace Energy {
             };
             crtKWh.XAxes = mXAxes;
             crtEuros.XAxes = mXAxes;
+            crtBatt.XAxes = mXAxes;
             clmAfnKWh.XToolTipLabelFormatter = sXFormatter;
             clmAfnKWh.Values = mChartData;
-            clmAfnKWh.Mapping = (pObject, pIndex) => pObject is DataLine pDataLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pDataLine.xNetConsumed)
+            clmAfnKWh.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pProviderLine.xNetConsumed)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             clmLevKWh.Values = mChartData;
-            clmLevKWh.Mapping = (pObject, pIndex) => pObject is DataLine pDataLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, -pDataLine.xNetProduced)
+            clmLevKWh.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, -pProviderLine.xNetProduced)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             clmAfnEur.XToolTipLabelFormatter = sXFormatter;
             clmAfnEur.Values = mChartData;
-            clmAfnEur.Mapping = (pObject, pIndex) => pObject is DataLine pDataLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pDataLine.xConsumedPrice)
+            clmAfnEur.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pProviderLine.xConsumedPrice)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             clmLevEur.Values = mChartData;
-            clmLevEur.Mapping = (pObject, pIndex) => pObject is DataLine pDataLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, -pDataLine.xProducedPrice)
+            clmLevEur.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, -pProviderLine.xProducedPrice)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             clmBatt.Values = mChartData;
-            clmBatt.Mapping = (pObject, pIndex) => pObject is DataLine pDataLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pDataLine.xBattery)
+            clmBatt.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pProviderLine.xBattery)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             mIndexStart = 0;
         }
@@ -127,13 +128,14 @@ namespace Energy {
         private void sFillChart() {
             int lIndex;
             int lIndexData;
+            List<ProviderLine> lProviderLines;
 
             mChartData.Clear();
-
+            lProviderLines = Data.getInstance.xSelectedProvider.xProviderLines;
             for (lIndex = 0; lIndex <= mPeriod; lIndex++) {
                 lIndexData = mIndexStart + lIndex;
-                if (lIndexData >= 0 && lIndexData < Data.getInstance.xLines.Count) {
-                    mChartData.Add(Data.getInstance.xLines[lIndexData]);
+                if (lIndexData >= 0 && lIndexData < lProviderLines.Count) {
+                    mChartData.Add(lProviderLines[lIndexData]);
                 }
             }
         }

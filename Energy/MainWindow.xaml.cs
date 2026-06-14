@@ -20,25 +20,43 @@ namespace Energy {
         private pgeTable mPageTable;
         private pgeGraph mPageGraph;
         private pgeProviders mPageProviders;
-        private Provider mProvider = new Provider("ANWB");
-        private double mTax = 0.09161;
+        private pgeTotal mPageTotal;
 
         public MainWindow() {
             mPageTable = new pgeTable();
             mPageGraph = new pgeGraph();
             mPageProviders = new pgeProviders();
+            mPageProviders.ProvidersChanged += hProvidersChanged;
+            mPageTotal = new pgeTotal();
             InitializeComponent();
             sCalculate();
+            sLoadProviders();
             frView.Navigate(mPageTable);
         }
 
+        private void sGetFiles() {
+            string lPath;
+            string[] lFiles;
+            lPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
+            lFiles = Directory.GetFiles(lPath, "Afname*.csv");
+            foreach (string lFile in lFiles) {
+                MessageBox.Show(lFile);
+            }
+        }
+
+        private void hProvidersChanged(object? sender, EventArgs e) {
+            sCalculate(); 
+            sLoadProviders();
+        }
+
         private void sCalculate() {
-            int lBattery;
-            
-            lBattery = udBattery?.Value ?? 0;
-            Data.getInstance.xCalculate(mProvider, mTax, lBattery);
+//            int lBattery;
+
+//            lBattery = udBattery?.Value ?? 0;
+            Data.getInstance.xCalculate();
             mPageTable.xRefresh();
             mPageGraph.xRefresh();
+            mPageTotal.xRefresh();
         }
 
         private string? sOpendialog(string pFilter) {
@@ -64,6 +82,7 @@ namespace Energy {
             DateTime? lEnd;
             DataLine? lLine;
             bool? lFrmLoadResult;
+            bool lFilesOK;
 
             lLine = Data.getInstance.xLastEntry;
             if (lLine == null) {
@@ -79,19 +98,30 @@ namespace Energy {
                 lStart = lFrmLoad.xStart;
                 lEnd = lFrmLoad.xEnd;
                 if (lStart != null && lEnd != null) {
+                    lFilesOK = false;
                     lFileName = sOpendialog("Afname files (Afname*.csv)|Afname*.csv|All files (*.*)|*.*");
                     if (lFileName != null) {
                         lMeterConsumed = new MeterFile(lFileName, lStart.Value, lEnd.Value);
-                        lFileName = sOpendialog("Teruglevering files (Terug*.csv)|Terug*.csv|All files (*.*)|*.*");
-                        if (lFileName != null) {
-                            lMeterProduced = new MeterFile(lFileName, lStart.Value, lEnd.Value);
-                            lFileName = sOpendialog("Prijs files (Prijs*.xml)|Prijs*.xml|All files (*.*)|*.*");
+                        if (lMeterConsumed.xFileOK) {
+                            lFileName = sOpendialog("Teruglevering files (Terug*.csv)|Terug*.csv|All files (*.*)|*.*");
                             if (lFileName != null) {
-                                lPriceFile = new PriceFile(lFileName, lStart.Value, lEnd.Value);
-                                Data.getInstance.xImportMeterFile(lMeterConsumed, lMeterProduced, lPriceFile);
-                                mPageTable.xRefresh();
+                                lMeterProduced = new MeterFile(lFileName, lStart.Value, lEnd.Value);
+                                if (lMeterProduced.xFileOK) {
+                                    lFileName = sOpendialog("Prijs files (Prijs*.xml)|Prijs*.xml|All files (*.*)|*.*");
+                                    if (lFileName != null) {
+                                        lPriceFile = new PriceFile(lFileName, lStart.Value, lEnd.Value);
+                                        Data.getInstance.xImportMeterFile(lMeterConsumed, lMeterProduced, lPriceFile);
+                                        mPageTable.xRefresh();
+                                        mPageGraph.xRefresh();
+                                        mPageTotal.xRefresh();
+                                        lFilesOK = true;
+                                    }
+                                }
                             }
                         }
+                    }
+                    if (!lFilesOK) {
+                        MessageBox.Show("Onbruikbaar inputbestand!", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
@@ -130,8 +160,50 @@ namespace Energy {
             frView.Navigate(mPageProviders);
         }
 
+        private void btnTotal_Click(object sender, RoutedEventArgs e) {
+            frView.Navigate(mPageTotal);
+        }
+
         private void udBattery_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+            Data.getInstance.xBattery = udBattery?.Value ?? 0;
             sCalculate();
+        }
+
+        private void sLoadProviders() {
+            List<Provider> lProviders;
+            string lSelection;
+            int lIndex;
+
+            lSelection = string.Empty;
+            if (cmbProvider.SelectedIndex >= 0) {
+                lSelection = cmbProvider.SelectedItem.ToString() ?? string.Empty;
+            }
+            lProviders = Data.getInstance.xProviders;
+            cmbProvider.Items.Clear();
+            lIndex = 0;
+            foreach (Provider bProvider in lProviders) {
+                cmbProvider.Items.Add(bProvider.xLabel);
+                if (bProvider.xLabel == lSelection) {
+                    lIndex = lProviders.IndexOf(bProvider);
+                }
+            }
+            cmbProvider.SelectedIndex = lIndex;
+        }
+
+        private void cmbProvider_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            Provider lProvider;
+
+            if (cmbProvider.SelectedIndex >= 0) {
+                lProvider = Data.getInstance.xProviders[cmbProvider.SelectedIndex];
+                Data.getInstance.xSelectedProvider = lProvider;
+                mPageGraph.xRefresh();
+                mPageTable.xRefresh();
+                mPageTotal.xRefresh();
+            }
+        }
+
+        private void cmbFile_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+
         }
     }
 }

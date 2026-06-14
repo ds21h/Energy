@@ -32,11 +32,8 @@ namespace Energy {
             mStart = DateTime.SpecifyKind(pStart.ToUniversalTime(), DateTimeKind.Utc);
             mEnd = DateTime.SpecifyKind(pEnd.ToUniversalTime(), DateTimeKind.Utc);
             sInitLines();
-//            sExportTable(@"D:\Test\Energy\PriceTable01.csv");
             sProcessFile(pFileName);
-//            sExportTable(@"D:\Test\Energy\PriceTable02.csv");
             sCorrectPriceLines();
-//            sExportTable(@"D:\Test\Energy\PriceTable03.csv");
         }
 
         private void sInitLines() {

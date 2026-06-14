@@ -5,8 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Energy"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="pgeProviders">
+      d:DesignHeight="450"
+      d:DesignWidth="1000"
+      Title="pgeProviders" Width="Auto">
     <Page.Resources>
         <Style x:Key="lvStyle" TargetType="{x:Type ListView}">
             <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
@@ -16,14 +17,14 @@
             <Setter Property="ListView.View">
                 <Setter.Value>
                     <GridView>
-                        <GridViewColumn Header="Provider" Width="120">
+                        <GridViewColumn Header="Provider" Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tProvider" Text="{Binding xProvider, Mode=OneWay}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Variant" Width="120">
+                        <GridViewColumn Header="Variant" Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tVariant" Text="{Binding xVariant, Mode=OneWay}" TextAlignment="Right"/>
@@ -52,7 +53,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListView x:Name="lstProviders" Margin="0,0,0,5" Style="{DynamicResource lvStyle}" SelectionMode="Extended" Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" Grid.ColumnSpan="1" Grid.Column="0" SelectionChanged="lstProviders_SelectionChanged">
+        <ListView x:Name="lstProviders" Margin="10,5,0,5" Style="{DynamicResource lvStyle}" SelectionMode="Extended" Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" Grid.Column="0" SelectionChanged="lstProviders_SelectionChanged">
         </ListView>
         <Canvas Margin="50,10,0,0" Grid.Row="0" Grid.Column="1">
             <Grid>

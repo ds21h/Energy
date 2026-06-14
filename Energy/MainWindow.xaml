@@ -31,9 +31,15 @@
         </Menu>
 
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-            <Button x:Name="btnList" Content="List" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Click="btnList_Click"/>
-            <Button x:Name="btnGraph" Content="Graph" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Click="btnGraph_Click"/>
-            <Button x:Name="btnProv" Content="Contract" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Click="btnContract_Click"/>
+            <ComboBox x:Name="cmbFile" HorizontalAlignment="Left" Margin="0,5,0,0" Width="250" SelectionChanged="cmbFile_SelectionChanged">
+            </ComboBox>
+            <Button x:Name="btnList" Content="Lijst" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,25,0,0" VerticalAlignment="Top" Click="btnList_Click"/>
+            <Button x:Name="btnGraph" Content="Grafiek" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnGraph_Click"/>
+            <Button x:Name="btnProv" Content="Contracten" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnContract_Click"/>
+            <Button x:Name="btnTotal" Content="Totaal" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnTotal_Click"/>
+            <Label Content="Contract" HorizontalAlignment="Left" Margin="0,30,0,0" VerticalAlignment="Top"/>
+            <ComboBox x:Name="cmbProvider" HorizontalAlignment="Left" Margin="0,5,0,0" Width="250" SelectionChanged="cmbProvider_SelectionChanged">
+            </ComboBox>
             <Label Content="Batterij" HorizontalAlignment="Left" Margin="0,30,0,0" VerticalAlignment="Top"/>
             <xctk:IntegerUpDown Name="udBattery" Margin="20,0,0,0" AllowTextInput="False" DefaultValue="0" Maximum="20" Minimum="0" ValueChanged="udBattery_ValueChanged" />
         </StackPanel>
