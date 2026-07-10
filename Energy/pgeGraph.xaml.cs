@@ -18,13 +18,13 @@ namespace Energy {
 
     public partial class pgeGraph: Page {
 
-        private ObservableCollection<ProviderLine> mChartData;
+        private ObservableCollection<DisplayLine> mChartData;
         private List<Axis> mXAxes;
         private int mIndexStart;
         private int mPeriod;
 
         public pgeGraph() {
-            mChartData = new ObservableCollection<ProviderLine>();
+            mChartData = new ObservableCollection<DisplayLine>();
             InitializeComponent();
             mXAxes = new List<Axis> {
                 new Axis {
@@ -36,25 +36,25 @@ namespace Energy {
             crtBatt.XAxes = mXAxes;
             clmAfnKWh.XToolTipLabelFormatter = sXFormatter;
             clmAfnKWh.Values = mChartData;
-            clmAfnKWh.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pProviderLine.xNetConsumed)
+            clmAfnKWh.Mapping = (pObject, pIndex) => pObject is DisplayLine pDisplayLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pDisplayLine.xNetConsumed)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             clmLevKWh.Values = mChartData;
-            clmLevKWh.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, -pProviderLine.xNetProduced)
+            clmLevKWh.Mapping = (pObject, pIndex) => pObject is DisplayLine pDisplayLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, -pDisplayLine.xNetProduced)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             clmAfnEur.XToolTipLabelFormatter = sXFormatter;
             clmAfnEur.Values = mChartData;
-            clmAfnEur.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pProviderLine.xConsumedPrice)
+            clmAfnEur.Mapping = (pObject, pIndex) => pObject is DisplayLine pDisplayLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pDisplayLine.xConsumedPrice)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             clmLevEur.Values = mChartData;
-            clmLevEur.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, -pProviderLine.xProducedPrice)
+            clmLevEur.Mapping = (pObject, pIndex) => pObject is DisplayLine pDisplayLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, -pDisplayLine.xProducedPrice)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             clmBatt.Values = mChartData;
-            clmBatt.Mapping = (pObject, pIndex) => pObject is ProviderLine pProviderLine
-                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pProviderLine.xBattery)
+            clmBatt.Mapping = (pObject, pIndex) => pObject is DisplayLine pDisplayLine
+                ? new LiveChartsCore.Kernel.Coordinate(pIndex, pDisplayLine.xBattery)
                 : LiveChartsCore.Kernel.Coordinate.Empty;
             mIndexStart = 0;
         }
@@ -75,7 +75,7 @@ namespace Energy {
         private void Page_Loaded(object sender, RoutedEventArgs e) {
             DataLine? lLastLine;
 
-            lLastLine = Data.getInstance.xLastEntry;
+            lLastLine = Data.getInstance.xExtData.xLastEntry;
             if (lLastLine != null) {
                 dpStart.SelectedDate = lLastLine.xTimeStampLocal.AddDays(-6);
                 sSetPeriod();
@@ -120,7 +120,7 @@ namespace Energy {
                         break;
                 }
 
-                mIndexStart = (int)(lWork - Data.getInstance.xLines[0].xTimeStampUTC).TotalMinutes / 15;
+                mIndexStart = (int)(lWork - Data.getInstance.xExtData.xLines[0].xTimeStampUTC).TotalMinutes / 15;
                 mPeriod = lPeriod * 24 * 4;
             }
         }
@@ -128,14 +128,14 @@ namespace Energy {
         private void sFillChart() {
             int lIndex;
             int lIndexData;
-            List<ProviderLine> lProviderLines;
+            List<DisplayLine> lDisplayLines;
 
             mChartData.Clear();
-            lProviderLines = Data.getInstance.xSelectedProvider.xProviderLines;
+            lDisplayLines = Data.getInstance.xDisplayData.xDisplayLines;
             for (lIndex = 0; lIndex <= mPeriod; lIndex++) {
                 lIndexData = mIndexStart + lIndex;
-                if (lIndexData >= 0 && lIndexData < lProviderLines.Count) {
-                    mChartData.Add(lProviderLines[lIndexData]);
+                if (lIndexData >= 0 && lIndexData < lDisplayLines.Count) {
+                    mChartData.Add(lDisplayLines[lIndexData]);
                 }
             }
         }

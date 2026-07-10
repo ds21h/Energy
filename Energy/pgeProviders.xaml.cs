@@ -40,6 +40,22 @@ namespace Energy {
             }
         }
 
+        internal void xRefresh() {
+            sLoadProviderList();
+            if (mProviders.Count > 0) {
+                if (mSelectedProvider == null) {
+                    lstProviders.SelectedItem = mProviders[0];
+                } else {
+                    foreach (Provider bProvider in mProviders) {
+                        if (bProvider == mSelectedProvider) {
+                            lstProviders.SelectedItem = bProvider;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         private void sPostProvidersChanged() {
             EventHandler<EventArgs>? lHandler;
 
@@ -52,7 +68,7 @@ namespace Energy {
         private void sLoadProviderList() {
             List<Provider> lProviders;
 
-            lProviders = Data.getInstance.xProviders;
+            lProviders = Data.getInstance.xProviders.xProviders;
             mProviders.Clear();
             foreach (Provider bProvider in lProviders) {
                 mProviders.Add(bProvider);
@@ -84,12 +100,12 @@ namespace Energy {
                     mSelectedProvider!.xConsumedExtra = double.Parse(txtPrice.Text);
                     mSelectedProvider!.xProducedFixedPrice = double.Parse(txtReturn.Text);
                     mSelectedProvider!.xProducedExtra = double.Parse(txtReturnPrice.Text);
-                    Data.getInstance.xProvidersChanged = true;
+                    Data.getInstance.xProviders.xProvidersChanged = true;
                     sPostProvidersChanged();
                 } else {
                     if (mStatus == eStatus.New) {
                         lProvider = new Provider(txtProvider.Text, txtVariant.Text, double.Parse(txtFee.Text), double.Parse(txtConsumption.Text), double.Parse(txtPrice.Text), double.Parse(txtReturn.Text), double.Parse(txtReturnPrice.Text));
-                        Data.getInstance.xAddProvider(lProvider);
+                        Data.getInstance.xProviders.xAddProvider(lProvider);
                         sPostProvidersChanged();
                         sLoadProviderList();
                         foreach (Provider bProvider in mProviders) {
@@ -105,7 +121,7 @@ namespace Energy {
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e) {
-            Data.getInstance.xDeleteProvider(mSelectedProvider!);
+            Data.getInstance.xProviders.xDeleteProvider(mSelectedProvider!);
             sLoadProviderList();
             sPostProvidersChanged();
             if (mProviders.Count > 0) {
@@ -127,7 +143,7 @@ namespace Energy {
                 }
                 txtVariant.Background = Brushes.White;
                 if (lResult) {
-                    if (Data.getInstance.xProviderPresent(txtProvider.Text, txtVariant.Text)) {
+                    if (Data.getInstance.xProviders.xProviderPresent(txtProvider.Text, txtVariant.Text)) {
                         txtProvider.Background = Brushes.Red;
                         txtVariant.Background = Brushes.Red;
                         lResult = false;
@@ -141,7 +157,7 @@ namespace Energy {
                     txtFee.Background = Brushes.Red;
                     lResult = false;
                 } else {
-                    if (lValue > 0d && lValue < 1.5d) {
+                    if (lValue > 0d && lValue < 1d) {
                         txtFee.Background = Brushes.Red;
                         lResult = false;
                     }

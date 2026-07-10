@@ -11,8 +11,6 @@ namespace Energy {
         private double mConsumedExtra;
         private double mProducedFixedPrice;
         private double mProducedExtra;
-        private List<ProviderLine> mProviderLines = new List<ProviderLine>();
-        private List<MonthTotal> mMonthTotals = new List<MonthTotal>();
 
         public String xLabel {
             get {
@@ -83,18 +81,6 @@ namespace Energy {
             }
         }
 
-        internal List<ProviderLine> xProviderLines {
-            get {
-                return mProviderLines;
-            }
-        }
-
-        internal List<MonthTotal> xMonthTotals {
-            get {
-                return mMonthTotals;
-            }
-        }
-
         internal Provider() {
             mProvider = "";
             mVariant = "";
@@ -128,26 +114,5 @@ namespace Energy {
             }
             return lResult;
         }
-
-        internal void xImportLines(List<DataLine> pDataLines, double pTax) {
-            int lYear;
-            int lMonth;
-            MonthTotal lMonthTotal = new MonthTotal(0, 0);
-            ProviderLine lProviderLine;
-
-            mMonthTotals.Clear();
-            mProviderLines = new List<ProviderLine>(pDataLines.Count);
-            foreach (DataLine lDataLine in pDataLines) {
-                lYear = lDataLine.xTimeStampLocal.Year;
-                lMonth = lDataLine.xTimeStampLocal.Month;
-                if (!lMonthTotal.xIsCurrent(lYear, lMonth)) {
-                    lMonthTotal = new MonthTotal(lYear, lMonth);
-                    mMonthTotals.Add(lMonthTotal);
-                }
-                lProviderLine = new ProviderLine(this, lDataLine, pTax);
-                mProviderLines.Add(lProviderLine);
-                lMonthTotal.xAddLine(lProviderLine);
-            }
-        }   
     }
 }

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Energy {
-    internal class MonthTotal {
+    internal class DayTotal {
         private int mYear;
         private int mMonth;
-        private int mLastDay;
-        private int mDaysInMonth;
+        private int mDay;
         private double mConsumed;
         private double mConsumedNet;
         private double mConsumedPrice;
@@ -27,9 +26,9 @@ namespace Energy {
             }
         }
 
-        internal int xDaysInMonth {
+        internal int xDay {
             get {
-                return mDaysInMonth;
+                return mDay;
             }
         }
 
@@ -69,11 +68,10 @@ namespace Energy {
             }
         }
 
-        internal MonthTotal(int pYear, int pMonth) {
+        internal DayTotal(int pYear, int pMonth, int pDay) {
             mYear = pYear;
             mMonth = pMonth;
-            mLastDay = 0;
-            mDaysInMonth = 0;
+            mDay = pDay;
             mConsumed = 0;
             mConsumedNet = 0;
             mConsumedPrice = 0;
@@ -82,15 +80,11 @@ namespace Energy {
             mProducedPrice = 0;
         }
 
-        internal bool xIsCurrent(int pYear, int pMonth) {
-            return mYear == pYear && mMonth == pMonth;
+        internal bool xIsCurrent(int pYear, int pMonth, int pDay) {
+            return mYear == pYear && mMonth == pMonth && mDay == pDay;
         }
 
         internal void xAddLine(DisplayLine pLine) {
-            if (pLine.xTimeStampLocal.Day != mLastDay) {
-                mLastDay = pLine.xTimeStampLocal.Day;
-                mDaysInMonth++;
-            }
             mConsumed += pLine.xConsumed;
             mConsumedNet += pLine.xNetConsumed;
             mConsumedPrice += pLine.xConsumedPrice;

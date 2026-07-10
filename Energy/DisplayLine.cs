@@ -4,10 +4,12 @@ using System.Globalization;
 using System.Text;
 
 namespace Energy {
-    internal class ProviderLine {
+    internal class DisplayLine {
         private CultureInfo mCulture = new CultureInfo("nl-NL");
-        Provider mProvider;
         DataLine mDataLine;
+        private double mNetConsumed;
+        private double mNetProduced;
+        private double mBattery;
         private double mConsumedPrice;
         private double mProducedPrice;
 
@@ -58,7 +60,7 @@ namespace Energy {
                 return mDataLine.xPrice.ToString("###,##0.000", mCulture);
             }
         }
-    
+
         public string xConsumedStr {
             get {
                 return mDataLine.xConsumed.ToString("###,##0.000", mCulture);
@@ -83,27 +85,27 @@ namespace Energy {
             }
         }
 
-        public string xNetConsumedStr {
+        internal double xNetConsumed {
             get {
-                return mDataLine.xNetConsumed.ToString("###,##0.000", mCulture);
+                return mNetConsumed;
             }
         }
 
-        public Double xNetConsumed {
+        public string xNetConsumedStr {
             get {
-                return mDataLine.xNetConsumed;
+                return mNetConsumed.ToString("###,##0.000", mCulture);
+            }
+        }
+
+        internal double xNetProduced {
+            get {
+                return mNetProduced;
             }
         }
 
         public string xNetProducedStr {
             get {
-                return mDataLine.xNetProduced.ToString("###,##0.000", mCulture);
-            }
-        }
-
-        public double xNetProduced {
-            get {
-                return mDataLine.xNetProduced;
+                return mNetProduced.ToString("###,##0.000", mCulture);
             }
         }
 
@@ -133,29 +135,53 @@ namespace Energy {
 
         internal double xBattery {
             get {
-                return mDataLine.xBattery;
+                return mBattery;
             }
         }
 
         public string xBatteryStr {
             get {
-                return mDataLine.xBattery.ToString("##0.000", mCulture);
+                return mBattery.ToString("##0.000", mCulture);
             }
         }
 
-        internal ProviderLine(Provider pProvider, DataLine pDataLine, double pTax) {
-            mProvider = pProvider;
+        internal DisplayLine(Provider pProvider, DataLine pDataLine, double pTax, int pMaxBattery, double pLastBattery) {
             mDataLine = pDataLine;
+            sCalculateBattery(pMaxBattery, pLastBattery);
+            sCalculatePrices(pProvider, pTax);
+        }
+
+        private void sCalculatePrices(Provider pProvider, double pTax) {
             if (pProvider.xConsumedFixedPrice == 0) {
-                mConsumedPrice = mDataLine.xNetConsumed * (mDataLine.xPrice + mProvider.xConsumedExtra + pTax);
+                mConsumedPrice = mNetConsumed * (mDataLine.xPrice + pProvider.xConsumedExtra + pTax);
             } else {
-                mConsumedPrice = mDataLine.xNetConsumed * (mProvider.xConsumedFixedPrice + mProvider.xConsumedExtra + pTax);
+                mConsumedPrice = mNetConsumed * (pProvider.xConsumedFixedPrice + pProvider.xConsumedExtra + pTax);
             }
             if (pProvider.xProducedFixedPrice == 0) {
-                mProducedPrice = mDataLine.xNetProduced * (mDataLine.xPrice - mProvider.xProducedExtra);
+                mProducedPrice = mNetProduced * (mDataLine.xPrice - pProvider.xProducedExtra);
             } else {
-                mProducedPrice = mDataLine.xNetProduced * (mProvider.xProducedFixedPrice - mProvider.xProducedExtra);
+                mProducedPrice = mNetProduced * (pProvider.xProducedFixedPrice - pProvider.xProducedExtra);
             }
+        }
+
+        private void sCalculateBattery(int pMaxBattery, double pLastBattery) {
+            double lBattery;
+
+            lBattery = pLastBattery + mDataLine.xProduced;
+            if (lBattery > pMaxBattery) {
+                mNetProduced = lBattery - pMaxBattery;
+                lBattery = pMaxBattery;
+            } else {
+                mNetProduced = 0;
+            }
+            lBattery -= mDataLine.xConsumed;
+            if (lBattery < 0) {
+                mNetConsumed = -lBattery;
+                lBattery = 0;
+            } else {
+                mNetConsumed = 0;
+            }
+            mBattery = lBattery;
         }
     }
 }

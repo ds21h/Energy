@@ -16,20 +16,20 @@ namespace Energy {
     /// <summary>
     /// Interaction logic for pgeTotal.xaml
     /// </summary>
-    public partial class pgeTotal: Page {
-        private ObservableCollection<TotalLine> mTotalLines;
+    public partial class pgeMonthTotal: Page {
+        private ObservableCollection<MonthTotalLine> mTotalLines;
 
-        public pgeTotal() {
+        public pgeMonthTotal() {
             InitializeComponent();
-            mTotalLines = new ObservableCollection<TotalLine>();
+            mTotalLines = new ObservableCollection<MonthTotalLine>();
             lstTotals.ItemsSource = mTotalLines;
             xRefresh();
         }
 
         internal void xRefresh() {
             mTotalLines.Clear();
-            foreach (MonthTotal lMonthTotal in Data.getInstance.xSelectedProvider.xMonthTotals) {
-                mTotalLines.Add(new TotalLine(lMonthTotal));
+            foreach (MonthTotal lMonthTotal in Data.getInstance.xDisplayData.xMonthTotals) {
+                mTotalLines.Add(new MonthTotalLine(lMonthTotal));
             }
         }   
     }

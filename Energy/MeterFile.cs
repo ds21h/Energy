@@ -89,6 +89,7 @@ namespace Energy {
         }
 
         private bool sReadFile() {
+            FileStream lStream;
             StreamReader lStreamIn;
             string? lLine;
             string[] lParts;
@@ -99,7 +100,8 @@ namespace Energy {
 
             lResult = false;
             try {
-                lStreamIn = new StreamReader(mFileName);
+                lStream = new FileStream(mFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                lStreamIn = new StreamReader(lStream);
                 do {
                     lLine = lStreamIn.ReadLine();
                     if (lLine == null) {
@@ -120,11 +122,9 @@ namespace Energy {
                             }
                         }
                     }
-                    if (!lResult) {
-                        break;
-                    }
                 } while (true);
                 lStreamIn.Close();
+                lStream.Dispose();
             } catch (Exception) {
                 lResult = false;
             }
@@ -147,7 +147,7 @@ namespace Energy {
             if (mLines.Length > 0) {
                 if (!mLines[0].xEstimated && !mLines[mLines.Length - 1].xEstimated) {
                     lResult = true;
-                    for (lIndex = 0; lIndex < mLines.Length - 1; lIndex++) {
+                    for (lIndex = 0; lIndex < mLines.Length; lIndex++) {
                         lLine = mLines[lIndex];
                         if (lLine.xEstimated) {
                             if (lStart < 0) {

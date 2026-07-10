@@ -3,14 +3,17 @@
     <OutputType>WinExe</OutputType>
 	  <!--TargetFramework>net6.0-windows</TargetFramework-->
     <UseWPF>true</UseWPF>
+    <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
+    <StartupObject>Energy.App</StartupObject>
+    <PlatformTarget>x64</PlatformTarget>
     <!-- adjust TargetFramework to your project's TF (e.g. net48) if not using .NET Core/5+ -->
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Ensure the exact SkiaSharp native/runtime package your app needs is referenced.
          Version 2.88.0 matches the assembly version from the XDG0003 error. -->
-    <PackageReference Include="SkiaSharp" Version="2.88.0" />
-    <PackageReference Include="SkiaSharp.Views.WPF" Version="2.88.0" />
+    <PackageReference Include="SkiaSharp" Version="4.148.0" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="4.148.0" />
   </ItemGroup>
 
   <!-- After adding the references: dotnet restore / NuGet restore, Clean -> Rebuild in Visual Studio.

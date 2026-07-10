@@ -14,20 +14,22 @@ using System.Windows.Shapes;
 
 namespace Energy {
     /// <summary>
-    /// Interaction logic for pgeTable.xaml
+    /// Interaction logic for pgeDayTotal.xaml
     /// </summary>
-    public partial class pgeTable: Page {
-        private ObservableCollection<DisplayLine> mDataLines;
-        public pgeTable() {
+    public partial class pgeDayTotal: Page {
+        private ObservableCollection<DayTotalLine> mTotalLines;
+
+        public pgeDayTotal() {
             InitializeComponent();
-            mDataLines = new ObservableCollection<DisplayLine>(Data.getInstance.xDisplayData.xDisplayLines);
-            lstIntervals.ItemsSource = mDataLines;
+            mTotalLines = new ObservableCollection<DayTotalLine>();
+            lstTotals.ItemsSource = mTotalLines;
+            xRefresh();
         }
 
         internal void xRefresh() {
-            mDataLines.Clear();
-            foreach (DisplayLine lLine in Data.getInstance.xDisplayData.xDisplayLines) {
-                mDataLines.Add(lLine);
+            mTotalLines.Clear();
+            foreach (DayTotal lDayTotal in Data.getInstance.xDisplayData.xDayTotals) {
+                mTotalLines.Add(new DayTotalLine(lDayTotal));
             }
         }
     }
