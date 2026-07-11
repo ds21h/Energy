@@ -95,10 +95,17 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Prijs per kWh" Width="100">
+                        <GridViewColumn Header="Prijs/kWh gebruikt" Width="100">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tPriceKWh" Text="{Binding xPriceKWh, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tPriceKWhCons" Text="{Binding xPriceKWhCons, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Prijs/kWh geleverd" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tPriceKWhProd" Text="{Binding xPriceKWhProd, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -112,6 +119,14 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="0"/>
             <Setter Property="Padding" Value="0"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=xIsTotal, Mode=OneWay}" Value="true">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=xIsTotal, Mode=OneWay}" Value="true">
+                    <Setter Property="Background" Value="#FF68FF00"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </Page.Resources>
     <Grid>

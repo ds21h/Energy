@@ -92,10 +92,17 @@ namespace Energy {
 
         private void btnOK_Click(object sender, RoutedEventArgs e) {
             Provider lProvider;
+            Provider.TariffPeriod lPeriod;
 
+            if (rdoMonth.IsChecked == true) {
+                lPeriod = Provider.TariffPeriod.Month;
+            } else {
+                lPeriod = Provider.TariffPeriod.Day;
+            }
             if (sCheckInput()) {
                 if (mStatus == eStatus.Edit) {
-                    mSelectedProvider!.xMonthlyTariff = double.Parse(txtFee.Text);
+                    mSelectedProvider!.xTariff = double.Parse(txtFee.Text);
+                    mSelectedProvider!.xPeriod = lPeriod;
                     mSelectedProvider!.xConsumedFixedPrice = double.Parse(txtConsumption.Text);
                     mSelectedProvider!.xConsumedExtra = double.Parse(txtPrice.Text);
                     mSelectedProvider!.xProducedFixedPrice = double.Parse(txtReturn.Text);
@@ -104,7 +111,7 @@ namespace Energy {
                     sPostProvidersChanged();
                 } else {
                     if (mStatus == eStatus.New) {
-                        lProvider = new Provider(txtProvider.Text, txtVariant.Text, double.Parse(txtFee.Text), double.Parse(txtConsumption.Text), double.Parse(txtPrice.Text), double.Parse(txtReturn.Text), double.Parse(txtReturnPrice.Text));
+                        lProvider = new Provider(txtProvider.Text, txtVariant.Text, double.Parse(txtFee.Text), lPeriod, double.Parse(txtConsumption.Text), double.Parse(txtPrice.Text), double.Parse(txtReturn.Text), double.Parse(txtReturnPrice.Text));
                         Data.getInstance.xProviders.xAddProvider(lProvider);
                         sPostProvidersChanged();
                         sLoadProviderList();
@@ -156,11 +163,6 @@ namespace Energy {
                 if (lValue < 0d) {
                     txtFee.Background = Brushes.Red;
                     lResult = false;
-                } else {
-                    if (lValue > 0d && lValue < 1d) {
-                        txtFee.Background = Brushes.Red;
-                        lResult = false;
-                    }
                 }
             } else {
                 txtFee.Background = Brushes.Red;
@@ -232,7 +234,12 @@ namespace Energy {
                 sEnableDetails();
                 txtProvider.Text = mSelectedProvider.xProvider;
                 txtVariant.Text = mSelectedProvider.xVariant;
-                txtFee.Text = mSelectedProvider.xMonthlyTariff.ToString();
+                txtFee.Text = mSelectedProvider.xTariff.ToString();
+                if (mSelectedProvider.xPeriod == Provider.TariffPeriod.Month) {
+                    rdoMonth.IsChecked = true;
+                } else {
+                    rdoDay.IsChecked = true;
+                }
                 txtConsumption.Text = mSelectedProvider.xConsumedFixedPrice.ToString();
                 txtPrice.Text = mSelectedProvider.xConsumedExtra.ToString();
                 txtReturn.Text = mSelectedProvider.xProducedFixedPrice.ToString();

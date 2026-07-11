@@ -44,6 +44,7 @@ namespace Energy {
         private void sLoadProviders() {
             XmlDocument lDoc;
             XmlElement? lRoot;
+            XmlNode? lElement;
             string lFileName;
             int lVersion;
             Provider lProvider;
@@ -55,15 +56,15 @@ namespace Energy {
                 lDoc.Load(lFileName);
                 lRoot = lDoc.DocumentElement;
                 if (lRoot != null) {
+                    lElement = lRoot.GetAttributeNode("Version");
+                    if (lElement != null) {
+                        if (!int.TryParse(lElement.InnerText, out lVersion)) {
+                            lVersion = 0;
+                        }
+                    }
                     foreach (XmlNode bNode in lRoot.ChildNodes) {
                         if (bNode.NodeType != XmlNodeType.Comment) {
                             switch (bNode.Name) {
-                                case "Version": {
-                                        if (!int.TryParse(bNode.InnerText, out lVersion)) {
-                                            lVersion = 0;
-                                        }
-                                        break;
-                                    }
                                 case "Provider": {
                                         lProvider = sProcessProvider(bNode);
                                         if (lProvider != null) {
@@ -94,9 +95,17 @@ namespace Energy {
                                 lProvider.xVariant = bNode.InnerText;
                                 break;
                             }
-                        case "MonthlyTariff": {
+                        case "Tariff": {
                                 if (double.TryParse(bNode.InnerText, out lTemp)) {
-                                    lProvider.xMonthlyTariff = lTemp;
+                                    lProvider.xTariff = lTemp;
+                                }
+                                break;
+                            }
+                        case "Period": {
+                                if (bNode.InnerText == "Month") {
+                                    lProvider.xPeriod = Provider.TariffPeriod.Month;
+                                } else {
+                                    lProvider.xPeriod = Provider.TariffPeriod.Day;
                                 }
                                 break;
                             }
@@ -159,9 +168,14 @@ namespace Energy {
                     lText = lDoc.CreateTextNode(bProvider.xVariant);
                     lEntry.AppendChild(lText);
 
-                    lEntry = lDoc.CreateElement("MonthlyTariff");
+                    lEntry = lDoc.CreateElement("Tariff");
                     lProviderElement.AppendChild(lEntry);
-                    lText = lDoc.CreateTextNode(bProvider.xMonthlyTariff.ToString());
+                    lText = lDoc.CreateTextNode(bProvider.xTariff.ToString());
+                    lEntry.AppendChild(lText);
+
+                    lEntry = lDoc.CreateElement("Period");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xPeriod == Provider.TariffPeriod.Month ? "Month" : "Day");
                     lEntry.AppendChild(lText);
 
                     lEntry = lDoc.CreateElement("ConsumedFixedPrice");

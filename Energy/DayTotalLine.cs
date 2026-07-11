@@ -23,7 +23,14 @@ namespace Energy {
 
         public string xDay {
             get {
-                return mDayTotal.xDay.ToString();
+                string lResult;
+
+                if (mDayTotal.xIsTotal) {
+                    lResult = "Totaal";
+                } else {
+                    lResult = mDayTotal.xDay.ToString();
+                }
+                return lResult;
             }
         }
 
@@ -82,9 +89,35 @@ namespace Energy {
             }
         }
 
-        public string xPriceKWh {
+        public string xPriceKWhCons {
             get {
-                return (sTotalPriceInVAT / (mDayTotal.xConsumedNet - mDayTotal.xProducedNet)).ToString("###,##0.000", mCulture);
+                string lResult;
+
+                if (mDayTotal.xConsumedNet == 0) {
+                    lResult = "0,000";
+                } else {
+                    lResult = ((mDayTotal.xConsumedPrice * 1.21) / mDayTotal.xConsumedNet).ToString("###,##0.000", mCulture);
+                }   
+                return lResult;
+            }
+        }
+
+        public string xPriceKWhProd {
+            get {
+                string lResult;
+
+                if (mDayTotal.xProducedNet == 0) {
+                    lResult = "0,000";
+                } else {
+                    lResult = (mDayTotal.xProducedPrice / mDayTotal.xProducedNet).ToString("###,##0.000", mCulture);
+                }
+                return lResult;
+            }
+        }
+
+        public bool xIsTotal {
+            get {
+                return mDayTotal.xIsTotal;
             }
         }
 

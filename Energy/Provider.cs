@@ -4,9 +4,14 @@ using System.Text;
 
 namespace Energy {
     internal class Provider : IComparable<Provider> {
+        internal enum TariffPeriod {
+            Day,
+            Month
+        }
         private string mProvider;
         private string mVariant;
-        private double mMonthlyTariff;
+        private double mTariff;
+        private TariffPeriod mPeriod;
         private double mConsumedFixedPrice;
         private double mConsumedExtra;
         private double mProducedFixedPrice;
@@ -36,14 +41,23 @@ namespace Energy {
             }
         }
 
-        internal double xMonthlyTariff {
+        internal double xTariff {
             get {
-                return mMonthlyTariff;
+                return mTariff;
             }
             set {
-                mMonthlyTariff = value;
+                mTariff = value;
             }
         }
+
+        internal TariffPeriod xPeriod {
+            get {
+                return mPeriod;
+            }
+            set {
+                mPeriod = value;
+            }
+        }   
 
         internal double xConsumedFixedPrice {
             get {
@@ -84,17 +98,18 @@ namespace Energy {
         internal Provider() {
             mProvider = "";
             mVariant = "";
-            mMonthlyTariff = 0;
+            mTariff = 0;
             mConsumedFixedPrice = 0.0;
             mConsumedExtra = 0;
             mProducedFixedPrice = 0.0;
             mProducedExtra = 0.0;
         }
 
-        internal Provider (string pProvider, string pVariant, double pMonthlyTariff, double pConsumedFixedPrice, double pConsumedExtra, double pProducedFixedPrice, double pProducedExtra) {
+        internal Provider (string pProvider, string pVariant, double pMonthlyTariff, TariffPeriod pPeriod, double pConsumedFixedPrice, double pConsumedExtra, double pProducedFixedPrice, double pProducedExtra) {
             mProvider = pProvider;
             mVariant = pVariant;
-            mMonthlyTariff = pMonthlyTariff;
+            mTariff = pMonthlyTariff;
+            mPeriod = pPeriod;
             mConsumedFixedPrice = pConsumedFixedPrice;
             mConsumedExtra = pConsumedExtra;
             mProducedFixedPrice = pProducedFixedPrice;

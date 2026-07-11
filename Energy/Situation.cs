@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Energy {
     internal class Situation {
@@ -97,6 +98,7 @@ namespace Energy {
         private void sLoadSituation() {
             XmlDocument lDoc;
             XmlElement? lRoot;
+            XmlNode? lElement;
             string lFileName;
             int lVersion;
             int lTemp;
@@ -107,15 +109,15 @@ namespace Energy {
                 lDoc.Load(lFileName);
                 lRoot = lDoc.DocumentElement;
                 if (lRoot != null) {
+                    lElement = lRoot.GetAttributeNode("Versie");
+                    if (lElement != null) {
+                        if (!int.TryParse(lElement.InnerText, out lVersion)) {
+                            lVersion = 0;
+                        }
+                    }
                     foreach (XmlNode bNode in lRoot.ChildNodes) {
                         if (bNode.NodeType != XmlNodeType.Comment) {
                             switch (bNode.Name) {
-                                case "Version": {
-                                        if (!int.TryParse(bNode.InnerText, out lVersion)) {
-                                            lVersion = 0;
-                                        }
-                                        break;
-                                    }
                                 case "Naam": {
                                         mName = bNode.InnerText;
                                         break;

@@ -35,7 +35,7 @@
             </ComboBox>
             <CheckBox x:Name="chkBusiness" Content="Zakelijk" HorizontalAlignment="Right" Margin="0,10,0,0" VerticalAlignment="Top" Checked="chkBusiness_CheckedChanged" Unchecked="chkBusiness_CheckedChanged"/>
             <Label Content="Contract" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top"/>
-            <ComboBox x:Name="cmbProvider" HorizontalAlignment="Stretch" Margin="0,5,0,0" SelectionChanged="cmbProvider_SelectionChanged">
+            <ComboBox x:Name="cmbProvider" HorizontalAlignment="Stretch" Margin="20,0,0,0" SelectionChanged="cmbProvider_SelectionChanged">
             </ComboBox>
             <Label Content="Batterij" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
             <xctk:IntegerUpDown x:Name="udBattery" Margin="20,0,0,0" AllowTextInput="False" DefaultValue="0" Maximum="20" Minimum="0" ValueChanged="udBattery_ValueChanged" />

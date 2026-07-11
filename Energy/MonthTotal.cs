@@ -4,6 +4,8 @@ using System.Text;
 
 namespace Energy {
     internal class MonthTotal {
+        private const int cMonthTotal = 99;
+
         private int mYear;
         private int mMonth;
         private int mLastDay;
@@ -69,6 +71,25 @@ namespace Energy {
             }
         }
 
+        internal bool xIsTotal {
+            get {
+                return mMonth == cMonthTotal;
+            }
+        }
+
+        internal MonthTotal(int pYear) {
+            mYear = pYear;
+            mMonth = cMonthTotal;
+            mLastDay = 0;
+            mDaysInMonth = 0;
+            mConsumed = 0;
+            mConsumedNet = 0;
+            mConsumedPrice = 0;
+            mProduced = 0;
+            mProducedNet = 0;
+            mProducedPrice = 0;
+        }
+
         internal MonthTotal(int pYear, int pMonth) {
             mYear = pYear;
             mMonth = pMonth;
@@ -80,6 +101,10 @@ namespace Energy {
             mProduced = 0;
             mProducedNet = 0;
             mProducedPrice = 0;
+        }
+
+        internal bool xIsCurrent(int pYear) {
+            return mYear == pYear && mMonth == cMonthTotal;
         }
 
         internal bool xIsCurrent(int pYear, int pMonth) {

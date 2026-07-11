@@ -33,6 +33,7 @@ namespace Energy {
         private void sLoadTaxes() {
             XmlDocument lDoc;
             XmlElement? lRoot;
+            XmlNode? lElement;
             string lFileName;
             int lVersion;
             double lTemp;
@@ -43,15 +44,15 @@ namespace Energy {
                 lDoc.Load(lFileName);
                 lRoot = lDoc.DocumentElement;
                 if (lRoot != null) {
+                    lElement = lRoot.GetAttributeNode("Versie");
+                    if (lElement != null) {
+                        if (!int.TryParse(lElement.InnerText, out lVersion)) {
+                            lVersion = 0;
+                        }
+                    }
                     foreach (XmlNode bNode in lRoot.ChildNodes) {
                         if (bNode.NodeType != XmlNodeType.Comment) {
                             switch (bNode.Name) {
-                                case "Version": {
-                                        if (!int.TryParse(bNode.InnerText, out lVersion)) {
-                                            lVersion = 0;
-                                        }
-                                        break;
-                                    }
                                 case "PerKWh": {
                                         if (double.TryParse(bNode.InnerText, out lTemp)) {
                                             mTax = lTemp;

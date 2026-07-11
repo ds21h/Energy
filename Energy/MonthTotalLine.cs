@@ -17,7 +17,14 @@ namespace Energy {
 
         public string xMonth {
             get {
-                return mMonthTotal.xMonth.ToString();
+                string lResult;
+
+                if (mMonthTotal.xIsTotal) {
+                   lResult = "Totaal";
+                } else {
+                    lResult = mMonthTotal.xMonth.ToString();    
+                }
+                return lResult;
             }
         }
 
@@ -63,9 +70,21 @@ namespace Energy {
             }
         }
 
+        private double sTariff {
+            get {
+                double lResult;
+                if (Data.getInstance.xProviders.xSelectedProvider.xPeriod == Provider.TariffPeriod.Month) {
+                    lResult = Data.getInstance.xProviders.xSelectedProvider.xTariff;
+                } else {
+                    lResult = Data.getInstance.xProviders.xSelectedProvider.xTariff * mMonthTotal.xDaysInMonth;
+                }
+                return lResult;
+            }
+        }
+
         public string xTariff {
             get {
-                return (Data.getInstance.xProviders.xSelectedProvider.xMonthlyTariff).ToString("###,##0.000", mCulture);
+                return sTariff.ToString("###,##0.000", mCulture);
             }
         }
 
@@ -102,13 +121,19 @@ namespace Energy {
 
         public string xTotalPriceExTVA {
             get {
-                return (mMonthTotal.xConsumedPrice + sResort + Data.getInstance.xProviders.xSelectedProvider.xMonthlyTariff + sTaxDiscount - mMonthTotal.xProducedPrice).ToString("###,##0.000", mCulture);
+                return (mMonthTotal.xConsumedPrice + sResort + sTariff + sTaxDiscount - mMonthTotal.xProducedPrice).ToString("###,##0.000", mCulture);
             }
         }
 
         public string xTotalPriceInTVA {
             get {
-                return (((mMonthTotal.xConsumedPrice + sResort + Data.getInstance.xProviders.xSelectedProvider.xMonthlyTariff + sTaxDiscount) * 1.21) - mMonthTotal.xProducedPrice).ToString("###,##0.000", mCulture);
+                return (((mMonthTotal.xConsumedPrice + sResort + sTariff + sTaxDiscount) * 1.21) - mMonthTotal.xProducedPrice).ToString("###,##0.000", mCulture);
+            }
+        }
+
+        public bool xIsTotal {
+            get {
+                return mMonthTotal.xIsTotal;
             }
         }
 

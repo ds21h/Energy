@@ -125,6 +125,14 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="0"/>
             <Setter Property="Padding" Value="0"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=xIsTotal, Mode=OneWay}" Value="true">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=xIsTotal, Mode=OneWay}" Value="true">
+                    <Setter Property="Background" Value="#FF68FF00"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </Page.Resources>
     <Grid>
