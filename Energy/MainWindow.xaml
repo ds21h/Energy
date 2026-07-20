@@ -44,9 +44,12 @@
             </ComboBox>
             <Button x:Name="btnList" Content="Lijst" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,40,0,0" VerticalAlignment="Top" Click="btnList_Click"/>
             <Button x:Name="btnGraph" Content="Grafiek" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnGraph_Click"/>
-            <Button x:Name="btnProv" Content="Contracten" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnContract_Click"/>
             <Button x:Name="btnDayTotal" Content="DagTotaal" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnDayTotal_Click"/>
             <Button x:Name="btnMonthTotal" Content="MaandTotaal" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnMonthTotal_Click"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="0,0,0,10" Grid.Row="1" Grid.Column="0">
+            <Button x:Name="btnProv" Content="Contracten" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnContract_Click"/>
+            <Button x:Name="btnConnection" Content="Aansluitingen" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnConnection_Click"/>
         </StackPanel>
         <Frame x:Name="frView" NavigationUIVisibility="Hidden" Grid.Row="1" Grid.Column="1"/>
     </Grid>

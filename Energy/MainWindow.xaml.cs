@@ -20,6 +20,7 @@ namespace Energy {
         private pgeTable mPageTable;
         private pgeGraph mPageGraph;
         private pgeProviders mPageProviders;
+        private pgeConnection mPageConnection;
         private pgeDayTotal mPageDayTotal;
         private pgeMonthTotal mPageMonthTotal;
         private bool mSetSituation;
@@ -28,7 +29,9 @@ namespace Energy {
             mPageTable = new pgeTable();
             mPageGraph = new pgeGraph();
             mPageProviders = new pgeProviders();
-            mPageProviders.ProvidersChanged += hProvidersChanged;
+            mPageProviders.ProvidersChanged += hDataChanged;
+            mPageConnection = new pgeConnection();
+            mPageConnection.ResortsChanged += hDataChanged;
             mPageDayTotal = new pgeDayTotal();
             mPageMonthTotal = new pgeMonthTotal();
             mSetSituation = false;
@@ -36,7 +39,7 @@ namespace Energy {
             sGetSituations();
             sGetResorts();
             sCalculate();
-            sLoadProviders();
+            sGetProviders();
             frView.Navigate(mPageTable);
         }
 
@@ -54,17 +57,31 @@ namespace Energy {
 
         private void sGetResorts() {
             List<ResortTariff> lResorts;
+            string lSelection;
+            int lIndex;
 
+            lSelection = string.Empty;
+            if (cmbResort.SelectedIndex >= 0) {
+                lSelection = cmbResort.SelectedItem.ToString() ?? string.Empty;
+            }
             cmbResort.Items.Clear();
             lResorts = Data.getInstance.xResort.xResortTariffs;
-            foreach (ResortTariff lResort in lResorts) {
-                cmbResort.Items.Add(lResort.xConnection);
+            if (lResorts.Count > 0) {
+                lIndex = 0;
+                foreach (ResortTariff lResort in lResorts) {
+                    cmbResort.Items.Add(lResort.xConnection);
+                    if (lResort.xConnection == lSelection) {
+                        lIndex = lResorts.IndexOf(lResort);
+                    }
+                }
+                cmbResort.SelectedIndex = lIndex;
             }
         }
 
-        private void hProvidersChanged(object? sender, EventArgs e) {
+        private void hDataChanged(object? sender, EventArgs e) {
             sCalculate();
-            sLoadProviders();
+            sGetResorts();
+            sGetProviders();
         }
 
         private void sCalculate() {
@@ -155,6 +172,7 @@ namespace Energy {
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            Data.getInstance.xResort.xSaveResortLines();
             Data.getInstance.xProviders.xSaveProviders();
             Data.getInstance.xSituation.xSaveSituation();
         }
@@ -171,6 +189,10 @@ namespace Energy {
             frView.Navigate(mPageProviders);
         }
 
+        private void btnConnection_Click(object sender, RoutedEventArgs e) {
+            frView.Navigate(mPageConnection);
+        }
+
         private void btnDayTotal_Click(object sender, RoutedEventArgs e) {
             frView.Navigate(mPageDayTotal);
         }
@@ -184,7 +206,7 @@ namespace Energy {
             sCalculate();
         }
 
-        private void sLoadProviders() {
+        private void sGetProviders() {
             List<Provider> lProviders;
             string lSelection;
             int lIndex;
@@ -195,14 +217,16 @@ namespace Energy {
             }
             lProviders = Data.getInstance.xProviders.xProviders;
             cmbProvider.Items.Clear();
-            lIndex = 0;
-            foreach (Provider bProvider in lProviders) {
-                cmbProvider.Items.Add(bProvider.xLabel);
-                if (bProvider.xLabel == lSelection) {
-                    lIndex = lProviders.IndexOf(bProvider);
+            if (lProviders.Count > 0) {
+                lIndex = 0;
+                foreach (Provider bProvider in lProviders) {
+                    cmbProvider.Items.Add(bProvider.xLabel);
+                    if (bProvider.xLabel == lSelection) {
+                        lIndex = lProviders.IndexOf(bProvider);
+                    }
                 }
+                cmbProvider.SelectedIndex = lIndex;
             }
-            cmbProvider.SelectedIndex = lIndex;
         }
 
         private void cmbProvider_SelectionChanged(object sender, SelectionChangedEventArgs e) {
