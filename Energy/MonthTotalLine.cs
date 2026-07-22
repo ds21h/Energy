@@ -92,7 +92,7 @@ namespace Energy {
             get {
                 double lTaxDiscount;
 
-                if (Data.getInstance.xSituation.xBusiness) {
+                if (Data.getInstance.xSituations.xSelectedSituation.xBusiness) {
                     lTaxDiscount = 0.00;
                 } else {
                     lTaxDiscount = (mMonthTotal.xDaysInMonth) * Data.getInstance.xTaxes.xReturn;

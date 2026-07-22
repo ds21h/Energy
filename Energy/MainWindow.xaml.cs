@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -67,7 +68,7 @@ namespace Energy {
             cmbResort.Items.Clear();
             lResorts = Data.getInstance.xResort.xResortTariffs;
             if (lResorts.Count > 0) {
-                lIndex = 0;
+                lIndex = -1;
                 foreach (ResortTariff lResort in lResorts) {
                     cmbResort.Items.Add(lResort.xConnection);
                     if (lResort.xConnection == lSelection) {
@@ -174,7 +175,7 @@ namespace Energy {
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             Data.getInstance.xResort.xSaveResortLines();
             Data.getInstance.xProviders.xSaveProviders();
-            Data.getInstance.xSituation.xSaveSituation();
+            Data.getInstance.xSituations.xSelectedSituation.xSaveSituation();
         }
 
         private void btnList_Click(object sender, RoutedEventArgs e) {
@@ -202,7 +203,7 @@ namespace Energy {
         }
 
         private void udBattery_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
-            Data.getInstance.xSituation.xBattery = udBattery?.Value ?? 0;
+            Data.getInstance.xSituations.xSelectedSituation.xBattery = udBattery?.Value ?? 0;
             sCalculate();
         }
 
@@ -218,7 +219,7 @@ namespace Energy {
             lProviders = Data.getInstance.xProviders.xProviders;
             cmbProvider.Items.Clear();
             if (lProviders.Count > 0) {
-                lIndex = 0;
+                lIndex = -1;
                 foreach (Provider bProvider in lProviders) {
                     cmbProvider.Items.Add(bProvider.xLabel);
                     if (bProvider.xLabel == lSelection) {
@@ -233,29 +234,45 @@ namespace Energy {
             if (cmbProvider.SelectedIndex >= 0) {
                 Data.getInstance.xProviders.xSelectProvider(cmbProvider.SelectedItem.ToString() ?? string.Empty);
                 if (!mSetSituation) {
-                    Data.getInstance.xSituation.xProviderLabel = cmbProvider.SelectedItem.ToString() ?? string.Empty;
+                    Data.getInstance.xSituations.xSelectedSituation.xProviderLabel = cmbProvider.SelectedItem.ToString() ?? string.Empty;
                     sRefresh();
                 }
             }
         }
 
         private void cmbFile_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            bool lPresent;
+
             if (cmbFile.SelectedIndex >= 0) {
-                Data.getInstance.xSituation.xSaveSituation();
+                Data.getInstance.xSituations.xSelectedSituation.xSaveSituation();
                 Data.getInstance.xLoadSituation(cmbFile.SelectedItem.ToString() ?? string.Empty);
                 mSetSituation = true;
-                chkBusiness.IsChecked = Data.getInstance.xSituation.xBusiness;
-                udBattery.Value = Data.getInstance.xSituation.xBattery;
-                foreach (var bItem in cmbProvider.Items) {
-                    if (bItem.ToString() == Data.getInstance.xSituation.xProviderLabel) {
-                        cmbProvider.SelectedItem = bItem;
-                        break;
+                chkBusiness.IsChecked = Data.getInstance.xSituations.xSelectedSituation.xBusiness;
+                udBattery.Value = Data.getInstance.xSituations.xSelectedSituation.xBattery;
+                if (cmbProvider.Items.Count > 0) {
+                    lPresent = false;
+                    foreach (var bItem in cmbProvider.Items) {
+                        if (bItem.ToString() == Data.getInstance.xSituations.xSelectedSituation.xProviderLabel) {
+                            cmbProvider.SelectedItem = bItem;
+                            lPresent = true;
+                            break;
+                        }
+                    }
+                    if (!lPresent) {
+                        cmbProvider.SelectedIndex = -1;
                     }
                 }
-                foreach (var bItem in cmbResort.Items) {
-                    if (bItem.ToString() == Data.getInstance.xSituation.xConnectionLabel) {
-                        cmbResort.SelectedItem = bItem;
-                        break;
+                if (cmbResort.Items.Count > 0) {
+                    lPresent = false;
+                    foreach (var bItem in cmbResort.Items) {
+                        if (bItem.ToString() == Data.getInstance.xSituations.xSelectedSituation.xConnectionLabel) {
+                            cmbResort.SelectedItem = bItem;
+                            lPresent = true;
+                            break;
+                        }
+                    }
+                    if (!lPresent) {
+                        cmbResort.SelectedIndex = -1;
                     }
                 }
                 sRefresh();
@@ -276,15 +293,49 @@ namespace Energy {
             if (cmbResort.SelectedIndex >= 0) {
                 Data.getInstance.xResort.xSelectResortTariff(cmbResort.SelectedItem.ToString() ?? string.Empty);
                 if (!mSetSituation) {
-                    Data.getInstance.xSituation.xConnectionLabel = cmbResort.SelectedItem.ToString() ?? string.Empty;
+                    Data.getInstance.xSituations.xSelectedSituation.xConnectionLabel = cmbResort.SelectedItem.ToString() ?? string.Empty;
                     sRefresh();
                 }
             }
         }
 
         private void chkBusiness_CheckedChanged(object sender, RoutedEventArgs e) {
-            Data.getInstance.xSituation.xBusiness = chkBusiness.IsChecked ?? false;
+            Data.getInstance.xSituations.xSelectedSituation.xBusiness = chkBusiness.IsChecked ?? false;
             sRefresh();
+        }
+
+        private void btnTaxes_Click(object sender, RoutedEventArgs e) {
+            frmTaxes lFrmTaxes;
+            bool? lFrmTaxesResult;
+
+            lFrmTaxes = new frmTaxes();
+            lFrmTaxesResult = lFrmTaxes.ShowDialog();
+            if (lFrmTaxesResult.GetValueOrDefault()) {
+                sRefresh();
+            }
+            lFrmTaxes.Close();
+        }
+
+        private void mnuNewFile_Click(object sender, RoutedEventArgs e) {
+            frmNew lFrmNew;
+            bool? lFrmNewResult;
+            string lNewName;
+
+            lFrmNew = new frmNew();
+            lFrmNewResult = lFrmNew.ShowDialog();
+            if (lFrmNewResult.GetValueOrDefault()) {
+                lNewName = lFrmNew.xName;
+                Data.getInstance.xSituations.xAddSituation(lNewName);
+                sGetSituations();
+                foreach (var bItem in cmbFile.Items) {
+                    if (bItem.ToString() == lNewName) {
+                        cmbFile.SelectedItem = bItem;
+                        break;
+                    }
+                }
+                sRefresh();
+            }
+            lFrmNew.Close();
         }
     }
 }

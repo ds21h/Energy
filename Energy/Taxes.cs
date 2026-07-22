@@ -8,6 +8,7 @@ namespace Energy {
     internal class Taxes {
         private const string cFileName = "Belasting.xml";
         private const int cCurrentVersion = 1;
+        bool mChanged;
 
         private double mTax;
         private double mReturn;
@@ -16,11 +17,23 @@ namespace Energy {
             get {
                 return mTax;
             }
+            set {
+                if (mTax != value) {
+                    mTax = value;
+                    mChanged = true;
+                }
+            }
         }
 
         internal double xReturn {
             get {
                 return mReturn;
+            }
+            set {
+                if (mReturn != value) {
+                    mReturn = value;
+                    mChanged = true;
+                }
             }
         }
 
@@ -28,6 +41,7 @@ namespace Energy {
             mTax = 0.09161;
             mReturn = -1.42313;
             sLoadTaxes();
+            mChanged = false;
         }
 
         private void sLoadTaxes() {
@@ -69,6 +83,36 @@ namespace Energy {
                         }
                     }
                 }
+            }
+        }
+
+        internal void xSaveTaxes() {
+            XmlDocument lDoc;
+            XmlElement lRoot;
+            XmlElement lEntry;
+            XmlText lText;
+            XmlAttribute lAttribute;
+
+            if (mChanged) {
+                lDoc = new XmlDocument();
+                lRoot = lDoc.CreateElement("Belasting");
+                lDoc.AppendChild(lRoot);
+                lAttribute = lDoc.CreateAttribute("Versie");
+                lAttribute.Value = cCurrentVersion.ToString();
+                lRoot.Attributes.Append(lAttribute);
+
+                lEntry = lDoc.CreateElement("PerKWh");
+                lRoot.AppendChild(lEntry);
+                lText = lDoc.CreateTextNode(mTax.ToString());
+                lEntry.AppendChild(lText);
+
+                lEntry = lDoc.CreateElement("TerugPerDag");
+                lRoot.AppendChild(lEntry);
+                lText = lDoc.CreateTextNode(mReturn.ToString());
+                lEntry.AppendChild(lText);
+
+                lDoc.Save(Path.Combine(Parameters.GetInstance.xDataDir, cFileName));
+                mChanged = false;
             }
         }
     }

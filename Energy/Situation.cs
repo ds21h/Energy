@@ -76,13 +76,13 @@ namespace Energy {
             }
         }
 
-        internal Situation(string pName) {
+        internal Situation(string pName, bool pCreate = false) {
             mName = pName;
             mBusiness = false;
             mBattery = 0;
             mConnectionLabel = "";
             mProviderLabel = "";
-            mChanged = false;
+            mChanged = pCreate;
             sLoadSituation();
         }
 
@@ -96,6 +96,7 @@ namespace Energy {
         }
 
         private void sLoadSituation() {
+            DirectoryInfo lDir;
             XmlDocument lDoc;
             XmlElement? lRoot;
             XmlNode? lElement;
@@ -103,6 +104,10 @@ namespace Energy {
             int lVersion;
             int lTemp;
 
+            lDir = new DirectoryInfo(Path.Combine(Parameters.GetInstance.xDataDir, mName));
+            if (!lDir.Exists) {
+                lDir.Create();
+            }
             lFileName = Path.Combine(Parameters.GetInstance.xDataDir, mName, cFileName);
             if (File.Exists(lFileName)) {
                 lDoc = new XmlDocument();

@@ -50,7 +50,7 @@ namespace Energy {
             int lMaxBattery;
 
             lLastBattery = 0;
-            lMaxBattery = Data.getInstance.xSituation.xBattery;
+            lMaxBattery = Data.getInstance.xSituations.xSelectedSituation.xBattery;
             mMonthTotals.Clear();
             if (pDataLines.Count > 0) {
                 lYear = pDataLines[0].xTimeStampLocal.Year;

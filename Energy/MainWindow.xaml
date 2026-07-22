@@ -15,7 +15,7 @@
     Height="600">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="270"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -32,16 +32,19 @@
 
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
             <ComboBox x:Name="cmbFile" HorizontalAlignment="Stretch" Margin="0,5,0,0" SelectionChanged="cmbFile_SelectionChanged">
+                <ComboBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Name="mnuNewFile" Header="Nieuw Dossier" Click="mnuNewFile_Click" />
+                    </ContextMenu>
+                </ComboBox.ContextMenu>
             </ComboBox>
             <CheckBox x:Name="chkBusiness" Content="Zakelijk" HorizontalAlignment="Right" Margin="0,10,0,0" VerticalAlignment="Top" Checked="chkBusiness_CheckedChanged" Unchecked="chkBusiness_CheckedChanged"/>
             <Label Content="Contract" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top"/>
-            <ComboBox x:Name="cmbProvider" HorizontalAlignment="Stretch" Margin="20,0,0,0" SelectionChanged="cmbProvider_SelectionChanged">
-            </ComboBox>
+            <ComboBox x:Name="cmbProvider" HorizontalAlignment="Stretch" Margin="20,0,0,0" SelectionChanged="cmbProvider_SelectionChanged"/>
             <Label Content="Batterij" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
             <xctk:IntegerUpDown x:Name="udBattery" Margin="20,0,0,0" AllowTextInput="False" DefaultValue="0" Maximum="20" Minimum="0" ValueChanged="udBattery_ValueChanged" />
             <Label Content="Aansluiting" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
-            <ComboBox x:Name="cmbResort" HorizontalAlignment="Left" Margin="20,0,0,0" Width="250" SelectionChanged="cmbResort_SelectionChanged">
-            </ComboBox>
+            <ComboBox x:Name="cmbResort" HorizontalAlignment="Stretch" Margin="20,0,0,0" SelectionChanged="cmbResort_SelectionChanged"/>
             <Button x:Name="btnList" Content="Lijst" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,40,0,0" VerticalAlignment="Top" Click="btnList_Click"/>
             <Button x:Name="btnGraph" Content="Grafiek" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnGraph_Click"/>
             <Button x:Name="btnDayTotal" Content="DagTotaal" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnDayTotal_Click"/>
@@ -50,6 +53,7 @@
         <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="0,0,0,10" Grid.Row="1" Grid.Column="0">
             <Button x:Name="btnProv" Content="Contracten" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnContract_Click"/>
             <Button x:Name="btnConnection" Content="Aansluitingen" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnConnection_Click"/>
+            <Button x:Name="btnTaxes" Content="Belastingen" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Click="btnTaxes_Click"/>
         </StackPanel>
         <Frame x:Name="frView" NavigationUIVisibility="Hidden" Grid.Row="1" Grid.Column="1"/>
     </Grid>

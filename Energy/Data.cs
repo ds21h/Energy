@@ -15,7 +15,7 @@ namespace Energy {
         private ExtData mExtData;
         private Resort mResort;
         private Providers mProviders;
-        private Situation mSituation;
+        private Situations mSituations;
         private Taxes mTaxes;
         private DisplayData? mDisplayData;
 
@@ -31,9 +31,9 @@ namespace Energy {
             }
         }
 
-        internal Situation xSituation {
+        internal Situations xSituations {
             get {
-                return mSituation;
+                return mSituations;
             }
         }
 
@@ -71,13 +71,13 @@ namespace Energy {
             mExtData = new ExtData();
             mResort = new Resort();
             mProviders = new Providers();
-            mSituation = new Situation();
+            mSituations = new Situations();
             mTaxes = new Taxes();
             mDisplayData = null;
         }
 
         internal void xLoadSituation(string pName) {
-            mSituation = new Situation(pName);
+            mSituations.xSelectSituation(pName);
             mExtData = new ExtData(pName);
         }
 
