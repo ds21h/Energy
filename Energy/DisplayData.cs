@@ -52,6 +52,7 @@ namespace Energy {
             lLastBattery = 0;
             lMaxBattery = Data.getInstance.xSituations.xSelectedSituation.xBattery;
             mMonthTotals.Clear();
+            mDayTotals.Clear();
             if (pDataLines.Count > 0) {
                 lYear = pDataLines[0].xTimeStampLocal.Year;
                 lMonth = pDataLines[0].xTimeStampLocal.Month;
@@ -79,6 +80,7 @@ namespace Energy {
                         mDayTotals.Add(lDayTotal);
                     }
                     lDisplayLine = new DisplayLine(pProvider, lDataLine, pTax, lMaxBattery, lLastBattery);
+                    lLastBattery = lDisplayLine.xBattery;
                     mDisplayLines.Add(lDisplayLine);
                     lMonthTotal.xAddLine(lDisplayLine);
                     lMonthTotalYear.xAddLine(lDisplayLine);
