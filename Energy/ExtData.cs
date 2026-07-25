@@ -68,6 +68,7 @@ namespace Energy {
             double lConsumed;
             double lProduced;
             DataLine lDataLine;
+            bool lLowTariff;
 
             lFileName = Path.Combine(Parameters.GetInstance.xDataDir, mSituation, cFileNameData + ".csv");
             mLines.Clear();
@@ -80,7 +81,7 @@ namespace Energy {
                             break;
                         }
                         lParts = lLine.Split(';');
-                        if (lParts.Length >= 10) {
+                        if (lParts.Length >= 11) {
                             if (int.TryParse(lParts[0], out lVersion)) {
                                 if (lVersion == 1) {
                                     if (DateTime.TryParse(lParts[1], mFileCulture, out lTimeStampUTC)) {
@@ -94,8 +95,10 @@ namespace Energy {
                                                             if (double.TryParse(lParts[7], NumberStyles.Any, mFileCulture, out lPrice)) {
                                                                 if (double.TryParse(lParts[8], NumberStyles.Any, mFileCulture, out lConsumed)) {
                                                                     if (double.TryParse(lParts[9], NumberStyles.Any, mFileCulture, out lProduced)) {
-                                                                        lDataLine = new DataLine(lTimeStampUTC, lTimeStampLocal, lMeterConsumed, lConsumedEstimated, lMeterProduced, lProducedEstimated, lPrice, lConsumed, lProduced);
-                                                                        mLines.Add(lDataLine);
+                                                                        if (bool.TryParse(lParts[10], out lLowTariff)) {
+                                                                            lDataLine = new DataLine(lTimeStampUTC, lTimeStampLocal, lMeterConsumed, lConsumedEstimated, lMeterProduced, lProducedEstimated, lPrice, lConsumed, lProduced, lLowTariff);
+                                                                            mLines.Add(lDataLine);
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -129,10 +132,10 @@ namespace Energy {
             StreamWriter lStreamOut;
 
             lStreamOut = new StreamWriter(pFileName, false);
-            lStreamOut.WriteLine("Version;TimeStampUTC;TimeStampLocal;MeterConsumed;ConsumedEstimated;MeterProduced;ProducedEstimated;Price;Consumed;Produced");
+            lStreamOut.WriteLine("Version;TimeStampUTC;TimeStampLocal;MeterConsumed;ConsumedEstimated;MeterProduced;ProducedEstimated;Price;Consumed;Produced;LowTariff");
             foreach (DataLine bLine in mLines) {
                 lBuilder = new StringBuilder();
-                lBuilder.AppendLine(string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9}",
+                lBuilder.AppendLine(string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10}",
                     cCurrentVersionBase,
                     bLine.xTimeStampUTC.ToString(mFileCulture),
                     bLine.xTimeStampLocal.ToString(mFileCulture),
@@ -142,7 +145,8 @@ namespace Energy {
                     bLine.xProducedEstimated.ToString(),
                     bLine.xPrice.ToString(mFileCulture),
                     bLine.xConsumed.ToString(mFileCulture),
-                    bLine.xProduced.ToString(mFileCulture)));
+                    bLine.xProduced.ToString(mFileCulture),
+                    bLine.xLowTariff.ToString()));
                 lStreamOut.Write(lBuilder.ToString());
             }
             lStreamOut.Close();

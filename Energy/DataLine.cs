@@ -16,6 +16,7 @@ namespace Energy {
         private double mPrice;
         private double mConsumed;
         private double mProduced;
+        private bool mLowTariff;
 
         public string xTimeStampUTCStr {
             get {
@@ -134,7 +135,13 @@ namespace Energy {
             }
         }
 
-        internal DataLine(DateTime pTimeStampUTC, DateTime pTimeStampLocal, double pMeterConsumed, bool pConsumedEstimated, double pMeterProduced, bool pProducedEstimated, double pPrice, double pConsumed, double pProduced) {
+        internal bool xLowTariff {
+            get {
+                return mLowTariff;
+            }
+        }
+
+        internal DataLine(DateTime pTimeStampUTC, DateTime pTimeStampLocal, double pMeterConsumed, bool pConsumedEstimated, double pMeterProduced, bool pProducedEstimated, double pPrice, double pConsumed, double pProduced, bool pLowTariff) {
             mTimeStampUTC = pTimeStampUTC;
             mTimeStampLocal = pTimeStampLocal;
             mMeterConsumed = pMeterConsumed;
@@ -144,9 +151,12 @@ namespace Energy {
             mPrice = pPrice;
             mConsumed = pConsumed;
             mProduced = pProduced;
+            mLowTariff = pLowTariff;
         }
 
         internal DataLine(DateTime pTimeStampUTC) {
+            int lWeekDay;
+
             mTimeStampUTC = pTimeStampUTC;
             mTimeStampLocal = pTimeStampUTC.ToLocalTime();
             mMeterConsumed = 0;
@@ -156,6 +166,13 @@ namespace Energy {
             mPrice = 0;
             mConsumed = 0;
             mProduced = 0;
+            lWeekDay = (int)mTimeStampLocal.DayOfWeek;
+            mLowTariff = true;
+            if ((lWeekDay > 0) && (lWeekDay < 6)) {
+                if ((mTimeStampLocal.Hour >= 7) && (mTimeStampLocal.Hour < 23)) {
+                    mLowTariff = false;
+                }
+            }
         }
     }
 }

@@ -61,6 +61,12 @@ namespace Energy {
             }
         }
 
+        public bool xLowTariff {
+            get {
+                return mDataLine.xLowTariff;
+            }
+        }
+
         public string xConsumedStr {
             get {
                 return mDataLine.xConsumed.ToString("###,##0.000", mCulture);
@@ -152,15 +158,23 @@ namespace Energy {
         }
 
         private void sCalculatePrices(Provider pProvider, double pTax) {
-            if (pProvider.xConsumedFixedPrice == 0) {
+            if (pProvider.xConsumedFixedPriceHigh == 0) {
                 mConsumedPrice = mNetConsumed * (mDataLine.xPrice + pProvider.xConsumedExtra + pTax);
             } else {
-                mConsumedPrice = mNetConsumed * (pProvider.xConsumedFixedPrice + pProvider.xConsumedExtra + pTax);
+                if (mDataLine.xLowTariff) {
+                    mConsumedPrice = mNetConsumed * (pProvider.xConsumedFixedPriceLow + pProvider.xConsumedExtra + pTax);
+                } else {
+                    mConsumedPrice = mNetConsumed * (pProvider.xConsumedFixedPriceHigh + pProvider.xConsumedExtra + pTax);
+                }
             }
-            if (pProvider.xProducedFixedPrice == 0) {
+            if (pProvider.xProducedFixedPriceHigh == 0) {
                 mProducedPrice = mNetProduced * (mDataLine.xPrice - pProvider.xProducedExtra);
             } else {
-                mProducedPrice = mNetProduced * (pProvider.xProducedFixedPrice - pProvider.xProducedExtra);
+                if (mDataLine.xLowTariff) {
+                    mProducedPrice = mNetProduced * (pProvider.xProducedFixedPriceLow - pProvider.xProducedExtra);
+                } else {
+                    mProducedPrice = mNetProduced * (pProvider.xProducedFixedPriceHigh - pProvider.xProducedExtra);
+                }
             }
         }
 

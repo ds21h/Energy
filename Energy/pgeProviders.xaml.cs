@@ -82,9 +82,11 @@ namespace Energy {
             txtProvider.Text = "";
             txtVariant.Text = "";
             txtFee.Text = "";
-            txtConsumption.Text = "";
+            txtConsumptionHigh.Text = "";
+            txtConsumptionLow.Text = "";
             txtPrice.Text = "";
-            txtReturn.Text = "";
+            txtReturnHigh.Text = "";
+            txtReturnLow.Text = "";
             txtReturnPrice.Text = "";
             btnDelete.Visibility = Visibility.Collapsed;
             txtProvider.Focus();
@@ -103,15 +105,17 @@ namespace Energy {
                 if (mStatus == eStatus.Edit) {
                     mSelectedProvider!.xTariff = double.Parse(txtFee.Text);
                     mSelectedProvider!.xPeriod = lPeriod;
-                    mSelectedProvider!.xConsumedFixedPrice = double.Parse(txtConsumption.Text);
+                    mSelectedProvider!.xConsumedFixedPriceHigh = double.Parse(txtConsumptionHigh.Text);
+                    mSelectedProvider!.xConsumedFixedPriceLow = double.Parse(txtConsumptionLow.Text);
                     mSelectedProvider!.xConsumedExtra = double.Parse(txtPrice.Text);
-                    mSelectedProvider!.xProducedFixedPrice = double.Parse(txtReturn.Text);
+                    mSelectedProvider!.xProducedFixedPriceHigh = double.Parse(txtReturnHigh.Text);
+                    mSelectedProvider!.xProducedFixedPriceLow = double.Parse(txtReturnLow.Text);
                     mSelectedProvider!.xProducedExtra = double.Parse(txtReturnPrice.Text);
                     Data.getInstance.xProviders.xProvidersChanged = true;
                     sPostProvidersChanged();
                 } else {
                     if (mStatus == eStatus.New) {
-                        lProvider = new Provider(txtProvider.Text, txtVariant.Text, double.Parse(txtFee.Text), lPeriod, double.Parse(txtConsumption.Text), double.Parse(txtPrice.Text), double.Parse(txtReturn.Text), double.Parse(txtReturnPrice.Text));
+                        lProvider = new Provider(txtProvider.Text, txtVariant.Text, double.Parse(txtFee.Text), lPeriod, double.Parse(txtConsumptionHigh.Text), double.Parse(txtConsumptionLow.Text), double.Parse(txtPrice.Text), double.Parse(txtReturnHigh.Text), double.Parse(txtReturnLow.Text), double.Parse(txtReturnPrice.Text));
                         Data.getInstance.xProviders.xAddProvider(lProvider);
                         sPostProvidersChanged();
                         sLoadProviderList();
@@ -169,17 +173,33 @@ namespace Energy {
                 lResult = false;
             }
 
-            if (double.TryParse(txtConsumption.Text, out lValue)) {
+            if (double.TryParse(txtConsumptionHigh.Text, out lValue)) {
                 if (lValue < 0d || lValue > 1.5d) {
-                    txtConsumption.Background = Brushes.Red;
+                    txtConsumptionHigh.Background = Brushes.Red;
                     lResult = false;
                 } else {
-                    txtConsumption.Background = Brushes.White;
+                    txtConsumptionHigh.Background = Brushes.White;
+                    if (lValue == 0d) {
+                        txtConsumptionLow.Text = "0";
+                    }
                 }
             } else {
-                txtConsumption.Background = Brushes.Red;
+                txtConsumptionHigh.Background = Brushes.Red;
                 lResult = false;
             }
+
+            if (double.TryParse(txtConsumptionLow.Text, out lValue)) {
+                if (lValue < 0d || lValue > 1.5d) {
+                    txtConsumptionLow.Background = Brushes.Red;
+                    lResult = false;
+                } else {
+                    txtConsumptionLow.Background = Brushes.White;
+                }
+            } else {
+                txtConsumptionLow.Background = Brushes.Red;
+                lResult = false;
+            }
+
             if (double.TryParse(txtPrice.Text, out lValue)) {
                 if (lValue < 0d || lValue > 1.5d) {
                     txtPrice.Background = Brushes.Red;
@@ -192,15 +212,30 @@ namespace Energy {
                 lResult = false;
             }
 
-            if (double.TryParse(txtReturn.Text, out lValue)) {
+            if (double.TryParse(txtReturnHigh.Text, out lValue)) {
                 if (lValue < 0d || lValue > 1.5d) {
-                    txtReturn.Background = Brushes.Red;
+                    txtReturnHigh.Background = Brushes.Red;
                     lResult = false;
                 } else {
-                    txtReturn.Background = Brushes.White;
+                    txtReturnHigh.Background = Brushes.White;
+                    if (lValue == 0d) {
+                        txtReturnLow.Text = "0";
+                    }
                 }
             } else {
-                txtReturn.Background = Brushes.Red;
+                txtReturnHigh.Background = Brushes.Red;
+                lResult = false;
+            }
+
+            if (double.TryParse(txtReturnLow.Text, out lValue)) {
+                if (lValue < 0d || lValue > 1.5d) {
+                    txtReturnLow.Background = Brushes.Red;
+                    lResult = false;
+                } else {
+                    txtReturnLow.Background = Brushes.White;
+                }
+            } else {
+                txtReturnLow.Background = Brushes.Red;
                 lResult = false;
             }
 
@@ -240,9 +275,11 @@ namespace Energy {
                 } else {
                     rdoDay.IsChecked = true;
                 }
-                txtConsumption.Text = mSelectedProvider.xConsumedFixedPrice.ToString();
+                txtConsumptionHigh.Text = mSelectedProvider.xConsumedFixedPriceHigh.ToString();
+                txtConsumptionLow.Text = mSelectedProvider.xConsumedFixedPriceLow.ToString();
                 txtPrice.Text = mSelectedProvider.xConsumedExtra.ToString();
-                txtReturn.Text = mSelectedProvider.xProducedFixedPrice.ToString();
+                txtReturnHigh.Text = mSelectedProvider.xProducedFixedPriceHigh.ToString();
+                txtReturnLow.Text = mSelectedProvider.xProducedFixedPriceLow.ToString();
                 txtReturnPrice.Text = mSelectedProvider.xProducedExtra.ToString();
                 btnDelete.Visibility = Visibility.Visible;
                 txtFee.Focus();
@@ -251,9 +288,11 @@ namespace Energy {
                 txtProvider.Text = "";
                 txtVariant.Text = "";
                 txtFee.Text = "";
-                txtConsumption.Text = "";
+                txtConsumptionHigh.Text = "";
+                txtConsumptionLow.Text = "";
                 txtPrice.Text = "";
-                txtReturn.Text = "";
+                txtReturnHigh.Text = "";
+                txtReturnLow.Text = "";
                 txtReturnPrice.Text = "";
                 btnDelete.Visibility = Visibility.Collapsed;
             }
@@ -266,12 +305,16 @@ namespace Energy {
             txtVariant.Background = Brushes.LightGray;
             txtFee.IsEnabled = false;
             txtFee.Background = Brushes.LightGray;
-            txtConsumption.IsEnabled = false;
-            txtConsumption.Background = Brushes.LightGray;
+            txtConsumptionHigh.IsEnabled = false;
+            txtConsumptionHigh.Background = Brushes.LightGray;
+            txtConsumptionLow.IsEnabled = false;
+            txtConsumptionLow.Background = Brushes.LightGray;
             txtPrice.IsEnabled = false;
             txtPrice.Background = Brushes.LightGray;
-            txtReturn.IsEnabled = false;
-            txtReturn.Background = Brushes.LightGray;
+            txtReturnHigh.IsEnabled = false;
+            txtReturnHigh.Background = Brushes.LightGray;
+            txtReturnLow.IsEnabled = false;
+            txtReturnLow.Background = Brushes.LightGray;
             txtReturnPrice.IsEnabled = false;
             txtReturnPrice.Background = Brushes.LightGray;
         }
@@ -286,12 +329,16 @@ namespace Energy {
         private void sEnableDetails() {
             txtFee.IsEnabled = true;
             txtFee.Background = Brushes.White;
-            txtConsumption.IsEnabled = true;
-            txtConsumption.Background = Brushes.White;
+            txtConsumptionHigh.IsEnabled = true;
+            txtConsumptionHigh.Background = Brushes.White;
+            txtConsumptionLow.IsEnabled = true;
+            txtConsumptionLow.Background = Brushes.White;
             txtPrice.IsEnabled = true;
             txtPrice.Background = Brushes.White;
-            txtReturn.IsEnabled = true;
-            txtReturn.Background = Brushes.White;
+            txtReturnHigh.IsEnabled = true;
+            txtReturnHigh.Background = Brushes.White;
+            txtReturnLow.IsEnabled = true;
+            txtReturnLow.Background = Brushes.White;
             txtReturnPrice.IsEnabled = true;
             txtReturnPrice.Background = Brushes.White;
         }

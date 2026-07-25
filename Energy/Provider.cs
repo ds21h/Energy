@@ -12,9 +12,11 @@ namespace Energy {
         private string mVariant;
         private double mTariff;
         private TariffPeriod mPeriod;
-        private double mConsumedFixedPrice;
+        private double mConsumedFixedPriceHigh;
+        private double mConsumedFixedPriceLow;
         private double mConsumedExtra;
-        private double mProducedFixedPrice;
+        private double mProducedFixedPriceHigh;
+        private double mProducedFixedPriceLow;
         private double mProducedExtra;
 
         public String xLabel {
@@ -59,12 +61,21 @@ namespace Energy {
             }
         }   
 
-        internal double xConsumedFixedPrice {
+        internal double xConsumedFixedPriceHigh {
             get {
-                return mConsumedFixedPrice;
+                return mConsumedFixedPriceHigh;
             }
             set {
-                mConsumedFixedPrice = value;
+                mConsumedFixedPriceHigh = value;
+            }
+        }
+
+        internal double xConsumedFixedPriceLow {
+            get {
+                return mConsumedFixedPriceLow;
+            }
+            set {
+                mConsumedFixedPriceLow = value;
             }
         }
 
@@ -77,12 +88,21 @@ namespace Energy {
             }
         }
 
-        internal double xProducedFixedPrice {
+        internal double xProducedFixedPriceHigh {
             get {
-                return mProducedFixedPrice;
+                return mProducedFixedPriceHigh;
             }
             set {
-                mProducedFixedPrice = value;
+                mProducedFixedPriceHigh = value;
+            }
+        }
+
+        internal double xProducedFixedPriceLow {
+            get {
+                return mProducedFixedPriceLow;
+            }
+            set {
+                mProducedFixedPriceLow = value;
             }
         }
 
@@ -99,20 +119,24 @@ namespace Energy {
             mProvider = "";
             mVariant = "";
             mTariff = 0;
-            mConsumedFixedPrice = 0.0;
+            mConsumedFixedPriceHigh = 0.0;
+            mConsumedFixedPriceLow = 0.0;
             mConsumedExtra = 0;
-            mProducedFixedPrice = 0.0;
+            mProducedFixedPriceHigh = 0.0;
+            mProducedFixedPriceLow = 0.0;
             mProducedExtra = 0.0;
         }
 
-        internal Provider (string pProvider, string pVariant, double pMonthlyTariff, TariffPeriod pPeriod, double pConsumedFixedPrice, double pConsumedExtra, double pProducedFixedPrice, double pProducedExtra) {
+        internal Provider (string pProvider, string pVariant, double pMonthlyTariff, TariffPeriod pPeriod, double pConsumedFixedPriceHigh, double pConsumedFixedPriceLow, double pConsumedExtra, double pProducedFixedPriceHigh, double pProducedFixedPriceLow, double pProducedExtra) {
             mProvider = pProvider;
             mVariant = pVariant;
             mTariff = pMonthlyTariff;
             mPeriod = pPeriod;
-            mConsumedFixedPrice = pConsumedFixedPrice;
+            mConsumedFixedPriceHigh = pConsumedFixedPriceHigh;
+            mConsumedFixedPriceLow = pConsumedFixedPriceLow;
             mConsumedExtra = pConsumedExtra;
-            mProducedFixedPrice = pProducedFixedPrice;
+            mProducedFixedPriceHigh = pProducedFixedPriceHigh;
+            mProducedFixedPriceLow = pProducedFixedPriceLow;
             mProducedExtra = pProducedExtra;
         }
 

@@ -46,7 +46,7 @@ namespace Energy {
             mTimeStamp = pTimeStamp;
             mMeterValue = 0;
             mPeriodValue = 0;
-            mEstimated = true; 
+            mEstimated = true;
         }
 
         internal MeterLine(DateTime pTimeStamp, double pValue) {

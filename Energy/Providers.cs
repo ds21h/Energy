@@ -109,9 +109,15 @@ namespace Energy {
                                 }
                                 break;
                             }
-                        case "ConsumedFixedPrice": {
+                        case "ConsumedFixedPriceHigh": {
                                 if (double.TryParse(bNode.InnerText, out lTemp)) {
-                                    lProvider.xConsumedFixedPrice = lTemp;
+                                    lProvider.xConsumedFixedPriceHigh = lTemp;
+                                }
+                                break;
+                            }
+                        case "ConsumedFixedPriceLow": {
+                                if (double.TryParse(bNode.InnerText, out lTemp)) {
+                                    lProvider.xConsumedFixedPriceLow = lTemp;
                                 }
                                 break;
                             }
@@ -121,9 +127,15 @@ namespace Energy {
                                 }
                                 break;
                             }
-                        case "ProducedFixedPrice": {
+                        case "ProducedFixedPriceHigh": {
                                 if (double.TryParse(bNode.InnerText, out lTemp)) {
-                                    lProvider.xProducedFixedPrice = lTemp;
+                                    lProvider.xProducedFixedPriceHigh = lTemp;
+                                }
+                                break;
+                            }
+                        case "ProducedFixedPriceLow": {
+                                if (double.TryParse(bNode.InnerText, out lTemp)) {
+                                    lProvider.xProducedFixedPriceLow = lTemp;
                                 }
                                 break;
                             }
@@ -178,9 +190,14 @@ namespace Energy {
                     lText = lDoc.CreateTextNode(bProvider.xPeriod == Provider.TariffPeriod.Month ? "Month" : "Day");
                     lEntry.AppendChild(lText);
 
-                    lEntry = lDoc.CreateElement("ConsumedFixedPrice");
+                    lEntry = lDoc.CreateElement("ConsumedFixedPriceHigh");
                     lProviderElement.AppendChild(lEntry);
-                    lText = lDoc.CreateTextNode(bProvider.xConsumedFixedPrice.ToString());
+                    lText = lDoc.CreateTextNode(bProvider.xConsumedFixedPriceHigh.ToString());
+                    lEntry.AppendChild(lText);
+
+                    lEntry = lDoc.CreateElement("ConsumedFixedPriceLow");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xConsumedFixedPriceLow.ToString());
                     lEntry.AppendChild(lText);
 
                     lEntry = lDoc.CreateElement("ConsumedExtra");
@@ -188,9 +205,14 @@ namespace Energy {
                     lText = lDoc.CreateTextNode(bProvider.xConsumedExtra.ToString());
                     lEntry.AppendChild(lText);
 
-                    lEntry = lDoc.CreateElement("ProducedFixedPrice");
+                    lEntry = lDoc.CreateElement("ProducedFixedPriceHigh");
                     lProviderElement.AppendChild(lEntry);
-                    lText = lDoc.CreateTextNode(bProvider.xProducedFixedPrice.ToString());
+                    lText = lDoc.CreateTextNode(bProvider.xProducedFixedPriceHigh.ToString());
+                    lEntry.AppendChild(lText);
+
+                    lEntry = lDoc.CreateElement("ProducedFixedPriceLow");
+                    lProviderElement.AppendChild(lEntry);
+                    lText = lDoc.CreateTextNode(bProvider.xProducedFixedPriceLow.ToString());
                     lEntry.AppendChild(lText);
 
                     lEntry = lDoc.CreateElement("ProducedExtra");

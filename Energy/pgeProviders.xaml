@@ -70,19 +70,23 @@
                 <Label Grid.Column="0" Grid.Row="0" Content="Tarieven" HorizontalAlignment="Left" Margin="0,50,0,0" VerticalAlignment="Top"/>
                 <Label Grid.Column="0" Grid.Row="0" Content="Abonnement:" HorizontalAlignment="Left" Margin="0,70,0,0" VerticalAlignment="Top"/>
                 <Label Grid.Column="0" Grid.Row="0" Content="Afname" HorizontalAlignment="Left" Margin="0,90,0,0" VerticalAlignment="Top"/>
-                <Label Grid.Column="0" Grid.Row="0" Content="Bedrag/KWh:" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top"/>
-                <Label Grid.Column="0" Grid.Row="0" Content="Toeslag/KWh:" HorizontalAlignment="Left" Margin="0,130,0,0" VerticalAlignment="Top"/>
-                <Label Grid.Column="0" Grid.Row="0" Content="Teruglevering" HorizontalAlignment="Left" Margin="0,150,0,0" VerticalAlignment="Top"/>
-                <Label Grid.Column="0" Grid.Row="0" Content="Bedrag/KWh:" HorizontalAlignment="Left" Margin="0,170,0,0" VerticalAlignment="Top"/>
-                <Label Grid.Column="0" Grid.Row="0" Content="Toeslag/KWh:" HorizontalAlignment="Left" Margin="0,190,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Bedrag/KWh Piek:" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Bedrag/KWh Dal:" HorizontalAlignment="Left" Margin="0,130,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Toeslag/KWh:" HorizontalAlignment="Left" Margin="0,150,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Teruglevering" HorizontalAlignment="Left" Margin="0,170,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Bedrag/KWh Piek:" HorizontalAlignment="Left" Margin="0,190,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Bedrag/KWh Dal:" HorizontalAlignment="Left" Margin="0,210,0,0" VerticalAlignment="Top"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Toeslag/KWh:" HorizontalAlignment="Left" Margin="0,230,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="txtProvider" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,5,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="250" LostFocus="txtBox_LostFocus"/>
                 <TextBox x:Name="txtVariant" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,25,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="250" LostFocus="txtBox_LostFocus"/>
                 <TextBox x:Name="txtFee" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,75,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
-                <TextBox x:Name="txtConsumption" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,115,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
-                <TextBox x:Name="txtPrice" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,135,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
-                <TextBox x:Name="txtReturn" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,175,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
-                <TextBox x:Name="txtReturnPrice" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,195,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
-                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,10,0,0">
+                <TextBox x:Name="txtConsumptionHigh" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,115,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtConsumptionLow" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,135,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtPrice" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,155,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtReturnHigh" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,195,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtReturnLow" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,215,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <TextBox x:Name="txtReturnPrice" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,235,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="txtBox_LostFocus"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,20,0,0">
                     <Button x:Name="btnNew" Content="Nieuw" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Center" Width="75" Click="btnNew_Click"/>
                     <Button x:Name="btnOK" Content="Bewaren" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Center" Width="75" Click="btnOK_Click"/>
                     <Button x:Name="btnDelete" Content="Verwijderen" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Center" Width="75" Click="btnDelete_Click"/>
