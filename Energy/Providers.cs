@@ -9,6 +9,7 @@ namespace Energy {
         private const string cFileNameProviders = "Providers.xml";
         private const int cCurrentVersion = 1;
 
+
         private List<Provider> mProviders = new List<Provider>();
         private Provider mSelectedProvider;
         private bool mProvidersModified;

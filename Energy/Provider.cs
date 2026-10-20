@@ -8,6 +8,7 @@ namespace Energy {
             Day,
             Month
         }
+
         private string mProvider;
         private string mVariant;
         private double mTariff;
