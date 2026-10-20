@@ -11,6 +11,7 @@ namespace Energy {
         private double mNetProduced;
         private double mBattery;
         private double mConsumedPrice;
+        private double mConsumedPriceNet;
         private double mProducedPrice;
 
         public string xTimeStampUTCStr {
@@ -127,6 +128,12 @@ namespace Energy {
             }
         }
 
+        internal double xConsumedPriceNet {
+            get {
+                return mConsumedPriceNet;
+            }
+        }
+
         public string xProducedPriceStr {
             get {
                 return mProducedPrice.ToString("##0.000", mCulture);
@@ -160,11 +167,14 @@ namespace Energy {
         private void sCalculatePrices(Provider pProvider, double pTax) {
             if (pProvider.xConsumedFixedPriceHigh == 0) {
                 mConsumedPrice = mNetConsumed * (mDataLine.xPrice + pProvider.xConsumedExtra + pTax);
+                mConsumedPriceNet = mNetConsumed * (mDataLine.xPrice + pProvider.xConsumedExtra);
             } else {
                 if (mDataLine.xLowTariff) {
                     mConsumedPrice = mNetConsumed * (pProvider.xConsumedFixedPriceLow + pProvider.xConsumedExtra + pTax);
+                    mConsumedPriceNet = mNetConsumed * (pProvider.xConsumedFixedPriceLow + pProvider.xConsumedExtra);
                 } else {
                     mConsumedPrice = mNetConsumed * (pProvider.xConsumedFixedPriceHigh + pProvider.xConsumedExtra + pTax);
+                    mConsumedPriceNet = mNetConsumed * (pProvider.xConsumedFixedPriceHigh + pProvider.xConsumedExtra);
                 }
             }
             if (pProvider.xProducedFixedPriceHigh == 0) {
