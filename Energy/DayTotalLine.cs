@@ -89,7 +89,7 @@ namespace Energy {
             }
         }
 
-        public string xPriceKWhCons {
+        public string xPriceKWhConsExcl {
             get {
                 string lResult;
 
@@ -98,6 +98,32 @@ namespace Energy {
                 } else {
                     lResult = ((mDayTotal.xConsumedPrice * 1.21) / mDayTotal.xConsumedNet).ToString("###,##0.000", mCulture);
                 }   
+                return lResult;
+            }
+        }
+
+        public string xPriceKWhCons {
+            get {
+                string lResult;
+
+                if (mDayTotal.xConsumedNet == 0) {
+                    lResult = "0,000";
+                } else {
+                    lResult = ((mDayTotal.xConsumedPrice * 1.21) / mDayTotal.xConsumedNet).ToString("###,##0.000", mCulture);
+                }
+                return lResult;
+            }
+        }
+
+        public string xPriceKWhConsNet {
+            get {
+                string lResult;
+
+                if (mDayTotal.xConsumedNet == 0) {
+                    lResult = "0,000";
+                } else {
+                    lResult = (mDayTotal.xConsumedPriceNet / mDayTotal.xConsumedNet).ToString("###,##0.000", mCulture);
+                }
                 return lResult;
             }
         }

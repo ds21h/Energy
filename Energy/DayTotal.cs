@@ -12,6 +12,7 @@ namespace Energy {
         private double mConsumed;
         private double mConsumedNet;
         private double mConsumedPrice;
+        private double mConsumedPriceNet;
         private double mProduced;
         private double mProducedNet;
         private double mProducedPrice;
@@ -64,6 +65,12 @@ namespace Energy {
             }
         }
 
+        internal double xConsumedPriceNet {
+            get {
+                return mConsumedPriceNet;
+            }
+        }
+
         internal double xProducedPrice {
             get {
                 return mProducedPrice;
@@ -83,6 +90,7 @@ namespace Energy {
             mConsumed = 0;
             mConsumedNet = 0;
             mConsumedPrice = 0;
+            mConsumedPriceNet = 0;
             mProduced = 0;
             mProducedNet = 0;
             mProducedPrice = 0;
@@ -95,6 +103,7 @@ namespace Energy {
             mConsumed = 0;
             mConsumedNet = 0;
             mConsumedPrice = 0;
+            mConsumedPriceNet = 0;
             mProduced = 0;
             mProducedNet = 0;
             mProducedPrice = 0;
@@ -112,6 +121,7 @@ namespace Energy {
             mConsumed += pLine.xConsumed;
             mConsumedNet += pLine.xNetConsumed;
             mConsumedPrice += pLine.xConsumedPrice;
+            mConsumedPriceNet += pLine.xConsumedPriceNet;
             mProduced += pLine.xProduced;
             mProducedNet += pLine.xNetProduced;
             mProducedPrice += pLine.xProducedPrice;
