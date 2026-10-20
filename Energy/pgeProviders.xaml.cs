@@ -23,6 +23,7 @@ namespace Energy {
             Edit,
             Delete
         }
+
         private ObservableCollection<Provider> mProviders;
         private Provider? mSelectedProvider;
         private eStatus mStatus;

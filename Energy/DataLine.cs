@@ -6,7 +6,6 @@ using System.Text;
 namespace Energy {
     internal class DataLine {
         private CultureInfo mCulture = new CultureInfo("nl-NL");
-
         private DateTime mTimeStampUTC;
         private DateTime mTimeStampLocal;
         private double mMeterConsumed;

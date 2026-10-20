@@ -23,6 +23,7 @@ namespace Energy {
             }
         }
 
+
         internal DataLine? xLastEntry {
             get {
                 DataLine? lLine;

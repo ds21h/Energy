@@ -24,6 +24,7 @@ namespace Energy {
             }
         }
 
+
         internal double xPeriodValue {
             get {
                 return mPeriodValue; 
