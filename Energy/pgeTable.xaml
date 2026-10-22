@@ -31,91 +31,98 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Meter gebruikt" Width="100">
+                        <GridViewColumn Header="Meter gebr." Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tMeterConsumed" Text="{Binding xMeterConsumedStr, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Schatting" Width="100">
+                        <GridViewColumn Header="Schatting" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tConsumedEstimated" Text="{Binding xConsumedEstimated, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Meter geleverd" Width="100">
+                        <GridViewColumn Header="Meter gel." Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tMeterProduced" Text="{Binding xMeterProducedStr, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Schatting" Width="100">
+                        <GridViewColumn Header="Schatting" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tProducedEstimated" Text="{Binding xProducedEstimated, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Dyn. Prijs" Width="100">
+                        <GridViewColumn Header="Dyn. Prijs" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tPrice" Text="{Binding xPriceStr, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Dal" Width="100">
+                        <GridViewColumn Header="Netbeh. Prijs" Width="80">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tResortPrice" Text="{Binding xResortPriceStr, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Dal" Width="60">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tLowTariff" Text="{Binding xLowTariff, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Gebruikt" Width="100">
+                        <GridViewColumn Header="Gebruikt" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tConsumed" Text="{Binding xConsumedStr, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Geleverd" Width="100">
+                        <GridViewColumn Header="Geleverd" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tProduced" Text="{Binding xProducedStr, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Gebruikt (netto)" Width="100">
+                        <GridViewColumn Header="Gebr. (netto)" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tNConsumed" Text="{Binding xNetConsumedStr, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Prijs gebruikt" Width="100">
+                        <GridViewColumn Header="Prijs gebr." Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tPriceConsumed" Text="{Binding xConsumedPriceStr, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Geleverd (netto)" Width="100">
+                        <GridViewColumn Header="Gel. (netto)" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tNProduced" Text="{Binding xNetProducedStr, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Prijs geleverd" Width="100">
+                        <GridViewColumn Header="Prijs gel." Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tPriceProduced" Text="{Binding xProducedPriceStr, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Batterij" Width="100">
+                        <GridViewColumn Header="Batterij" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tBattery" Text="{Binding xBatteryStr, Mode=OneTime}" TextAlignment="Right"/>

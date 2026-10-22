@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Shapes;
 
 namespace Energy {
     internal class DisplayData {
@@ -27,17 +28,11 @@ namespace Energy {
         }
 
         internal DisplayData() {
-            Provider lProvider;
-            List<DataLine> lLines;
-            double lTax;
-
-            lProvider = Data.getInstance.xProviders.xSelectedProvider;
-            lLines = Data.getInstance.xExtData.xLines;
-            lTax = Data.getInstance.xTaxes.xTax;
-            sProcessLines(lProvider, lLines, lTax);
+            sProcessLines();
         }
 
-        private void sProcessLines(Provider pProvider,List<DataLine> pDataLines, double pTax) {
+        private void sProcessLines() {
+            List<DataLine> lDataLines;
             int lYear;
             int lMonth;
             int lDay;
@@ -49,17 +44,18 @@ namespace Energy {
             double lLastBattery;
             int lMaxBattery;
 
+            lDataLines = Data.getInstance.xExtData.xLines;
             lLastBattery = 0;
             lMaxBattery = Data.getInstance.xSituations.xSelectedSituation.xBattery;
             mMonthTotals.Clear();
             mDayTotals.Clear();
-            if (pDataLines.Count > 0) {
-                lYear = pDataLines[0].xTimeStampLocal.Year;
-                lMonth = pDataLines[0].xTimeStampLocal.Month;
+            if (lDataLines.Count > 0) {
+                lYear = lDataLines[0].xTimeStampLocal.Year;
+                lMonth = lDataLines[0].xTimeStampLocal.Month;
                 lMonthTotalYear = new MonthTotal(lYear);    
                 lDayTotalMonth = new DayTotal(lYear, lMonth);
-                mDisplayLines = new List<DisplayLine>(pDataLines.Count);
-                foreach (DataLine lDataLine in pDataLines) {
+                mDisplayLines = new List<DisplayLine>(lDataLines.Count);
+                foreach (DataLine lDataLine in lDataLines) {
                     lYear = lDataLine.xTimeStampLocal.Year;
                     lMonth = lDataLine.xTimeStampLocal.Month;
                     lDay = lDataLine.xTimeStampLocal.Day;
@@ -79,7 +75,7 @@ namespace Energy {
                         lDayTotal = new DayTotal(lYear, lMonth, lDay);
                         mDayTotals.Add(lDayTotal);
                     }
-                    lDisplayLine = new DisplayLine(pProvider, lDataLine, pTax, lMaxBattery, lLastBattery);
+                    lDisplayLine = new DisplayLine(lDataLine, lMaxBattery, lLastBattery);
                     lLastBattery = lDisplayLine.xBattery;
                     mDisplayLines.Add(lDisplayLine);
                     lMonthTotal.xAddLine(lDisplayLine);

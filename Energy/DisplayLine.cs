@@ -9,8 +9,10 @@ namespace Energy {
         DataLine mDataLine;
         private double mNetConsumed;
         private double mNetProduced;
+        private double mResortPrice;
         private double mBattery;
         private double mConsumedPrice;
+        private double mConsumedResortPrice;
         private double mConsumedPriceNet;
         private double mProducedPrice;
 
@@ -59,6 +61,12 @@ namespace Energy {
         public string xPriceStr {
             get {
                 return mDataLine.xPrice.ToString("###,##0.000", mCulture);
+            }
+        }
+
+        public string xResortPriceStr {
+            get {
+                return mResortPrice.ToString("###,##0.000", mCulture);
             }
         }
 
@@ -122,9 +130,21 @@ namespace Energy {
             }
         }
 
+        public string xConsumedResortPriceStr {
+            get {
+                return mConsumedPrice.ToString("##0.000", mCulture);
+            }
+        }
+
         internal double xConsumedPrice {
             get {
                 return mConsumedPrice;
+            }
+        }
+
+        internal double xConsumedResortPrice {
+            get {
+                return mConsumedResortPrice;
             }
         }
 
@@ -158,32 +178,39 @@ namespace Energy {
             }
         }
 
-        internal DisplayLine(Provider pProvider, DataLine pDataLine, double pTax, int pMaxBattery, double pLastBattery) {
+        internal DisplayLine(DataLine pDataLine, int pMaxBattery, double pLastBattery) {
             mDataLine = pDataLine;
+            sGetResortPrice();
             sCalculateBattery(pMaxBattery, pLastBattery);
-            sCalculatePrices(pProvider, pTax);
+            sCalculatePrices();
         }
 
-        private void sCalculatePrices(Provider pProvider, double pTax) {
-            if (pProvider.xConsumedFixedPriceHigh == 0) {
-                mConsumedPrice = mNetConsumed * (mDataLine.xPrice + pProvider.xConsumedExtra + pTax);
-                mConsumedPriceNet = mNetConsumed * (mDataLine.xPrice + pProvider.xConsumedExtra);
+        private void sCalculatePrices() {
+            Provider lProvider;
+            double lTax;
+
+            lProvider = Data.getInstance.xProviders.xSelectedProvider;
+            lTax = Data.getInstance.xTaxes.xTax;
+            if (lProvider.xConsumedFixedPriceHigh == 0) {
+                mConsumedPrice = mNetConsumed * (mDataLine.xPrice + mResortPrice + lProvider.xConsumedExtra + lTax);
+                mConsumedPriceNet = mNetConsumed * (mDataLine.xPrice + lProvider.xConsumedExtra);
             } else {
                 if (mDataLine.xLowTariff) {
-                    mConsumedPrice = mNetConsumed * (pProvider.xConsumedFixedPriceLow + pProvider.xConsumedExtra + pTax);
-                    mConsumedPriceNet = mNetConsumed * (pProvider.xConsumedFixedPriceLow + pProvider.xConsumedExtra);
+                    mConsumedPrice = mNetConsumed * (lProvider.xConsumedFixedPriceLow + mResortPrice + lProvider.xConsumedExtra + lTax);
+                    mConsumedPriceNet = mNetConsumed * (lProvider.xConsumedFixedPriceLow + lProvider.xConsumedExtra);
                 } else {
-                    mConsumedPrice = mNetConsumed * (pProvider.xConsumedFixedPriceHigh + pProvider.xConsumedExtra + pTax);
-                    mConsumedPriceNet = mNetConsumed * (pProvider.xConsumedFixedPriceHigh + pProvider.xConsumedExtra);
+                    mConsumedPrice = mNetConsumed * (lProvider.xConsumedFixedPriceHigh + mResortPrice + lProvider.xConsumedExtra + lTax);
+                    mConsumedPriceNet = mNetConsumed * (lProvider.xConsumedFixedPriceHigh + lProvider.xConsumedExtra);
                 }
             }
-            if (pProvider.xProducedFixedPriceHigh == 0) {
-                mProducedPrice = mNetProduced * (mDataLine.xPrice - pProvider.xProducedExtra);
+            mConsumedResortPrice = mNetConsumed * mResortPrice;
+            if (lProvider.xProducedFixedPriceHigh == 0) {
+                mProducedPrice = mNetProduced * (mDataLine.xPrice - lProvider.xProducedExtra);
             } else {
                 if (mDataLine.xLowTariff) {
-                    mProducedPrice = mNetProduced * (pProvider.xProducedFixedPriceLow - pProvider.xProducedExtra);
+                    mProducedPrice = mNetProduced * (lProvider.xProducedFixedPriceLow - lProvider.xProducedExtra);
                 } else {
-                    mProducedPrice = mNetProduced * (pProvider.xProducedFixedPriceHigh - pProvider.xProducedExtra);
+                    mProducedPrice = mNetProduced * (lProvider.xProducedFixedPriceHigh - lProvider.xProducedExtra);
                 }
             }
         }
@@ -206,6 +233,10 @@ namespace Energy {
                 mNetConsumed = 0;
             }
             mBattery = lBattery;
+        }
+
+        private void sGetResortPrice() {
+            mResortPrice = Data.getInstance.xResort.xResortTariff(mDataLine.xTimeStampLocal);
         }
     }
 }

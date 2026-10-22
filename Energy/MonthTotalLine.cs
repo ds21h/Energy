@@ -119,6 +119,12 @@ namespace Energy {
             }
         }
 
+        public string xResortVar {
+            get {
+                return mMonthTotal.xConsumedResortPrice.ToString("###,##0.000", mCulture);
+            }
+        }
+
         public string xTotalPriceExTVA {
             get {
                 return (mMonthTotal.xConsumedPrice + sResort + sTariff + sTaxDiscount - mMonthTotal.xProducedPrice).ToString("###,##0.000", mCulture);
