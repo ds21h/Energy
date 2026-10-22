@@ -60,13 +60,25 @@ namespace Energy {
 
         public string xConsumedPrice {
             get {
-                return mDayTotal.xConsumedPrice.ToString("###,##0.000", mCulture);
+                return mDayTotal.xConsumedPriceNet.ToString("###,##0.000", mCulture);
             }
         }
 
         public string xProducedPrice {
             get {
                 return mDayTotal.xProducedPrice.ToString("###,##0.000", mCulture);
+            }
+        }
+
+        public string xResortVar {
+            get {
+                return mDayTotal.xConsumedResortPrice.ToString("###,##0.000", mCulture);
+            }
+        }
+
+        public string xTax {
+            get {
+                return mDayTotal.xTax.ToString("###,##0.000", mCulture);
             }
         }
 

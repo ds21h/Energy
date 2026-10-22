@@ -14,6 +14,7 @@ namespace Energy {
         private double mConsumedPrice;
         private double mConsumedResortPrice;
         private double mConsumedPriceNet;
+        private double mTax;
         private double mProducedPrice;
 
         public string xTimeStampUTCStr {
@@ -166,6 +167,12 @@ namespace Energy {
             }
         }
 
+        internal double xTax {
+            get {
+                return mTax;
+            }
+        }
+
         internal double xBattery {
             get {
                 return mBattery;
@@ -204,6 +211,7 @@ namespace Energy {
                 }
             }
             mConsumedResortPrice = mNetConsumed * mResortPrice;
+            mTax = mNetConsumed * lTax;
             if (lProvider.xProducedFixedPriceHigh == 0) {
                 mProducedPrice = mNetProduced * (mDataLine.xPrice - lProvider.xProducedExtra);
             } else {

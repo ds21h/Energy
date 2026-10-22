@@ -58,9 +58,9 @@ namespace Energy {
             }
         }
 
-        public string xConsumedPrice {
+        public string xConsumedPriceNet {
             get {
-                return mMonthTotal.xConsumedPrice.ToString("###,##0.000", mCulture);
+                return mMonthTotal.xConsumedPriceNet.ToString("###,##0.000", mCulture);
             }
         }
 
@@ -85,6 +85,12 @@ namespace Energy {
         public string xTariff {
             get {
                 return sTariff.ToString("###,##0.000", mCulture);
+            }
+        }
+
+        public string xTax {
+            get {
+                return mMonthTotal.xTax.ToString("###,##0.000", mCulture);
             }
         }
 
@@ -127,13 +133,13 @@ namespace Energy {
 
         public string xTotalPriceExTVA {
             get {
-                return (mMonthTotal.xConsumedPrice + sResort + sTariff + sTaxDiscount - mMonthTotal.xProducedPrice).ToString("###,##0.000", mCulture);
+                return (mMonthTotal.xConsumedPriceNet + mMonthTotal.xConsumedResortPrice + sResort + sTariff + mMonthTotal.xTax + sTaxDiscount - mMonthTotal.xProducedPrice).ToString("###,##0.000", mCulture);
             }
         }
 
         public string xTotalPriceInTVA {
             get {
-                return (((mMonthTotal.xConsumedPrice + sResort + sTariff + sTaxDiscount) * 1.21) - mMonthTotal.xProducedPrice).ToString("###,##0.000", mCulture);
+                return (((mMonthTotal.xConsumedPriceNet + mMonthTotal.xConsumedResortPrice + sResort + sTariff + mMonthTotal.xTax + sTaxDiscount) * 1.21) - mMonthTotal.xProducedPrice).ToString("###,##0.000", mCulture);
             }
         }
 

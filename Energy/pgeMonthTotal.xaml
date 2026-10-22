@@ -69,7 +69,7 @@
                         <GridViewColumn Header="Prijs gebruikt" Width="100">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="tPriceConsumed" Text="{Binding xConsumedPrice, Mode=OneTime}" TextAlignment="Right"/>
+                                    <TextBlock x:Name="tPriceConsumed" Text="{Binding xConsumedPriceNet, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -98,6 +98,13 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="tTariff" Text="{Binding xTariff, Mode=OneTime}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Belasting" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="tTax" Text="{Binding xTax, Mode=OneTime}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
